@@ -45,16 +45,16 @@ RECAPTCHA_SECRET_KEY=
 ## viewの変更
 Jetstreamの場合。  
 `layouts/guest.blade.php`の`</head>`直前に`htmlScriptTagJsApi()`追加。
-```
+```php
         <!-- Scripts -->
         <script src="{{ mix('js/app.js') }}" defer></script>
 
-        {!! ReCaptcha::htmlScriptTagJsApi() !!}
+        {!! htmlScriptTagJsApi() !!}
     </head>
 ```
 
 `auth/register.blade.php`の登録ボタンの上辺りに`htmlFormSnippet()`追加。
-```
+```php
             <div class="mt-4">
                 {!! htmlFormSnippet() !!}
             </div>
@@ -97,4 +97,24 @@ RECAPTCHA_SECRET_KEY=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
 #RECAPTCHA_SECRET_KEY=
 ```
 
+Google側でlocalhostなどのドメインを削除。
+
+## phpunit用にもテストキー追加
+CIでのテスト用。  
+phpunit.xml
+```xml
+        <!--テスト用キー-->
+        <env name="RECAPTCHA_SITE_KEY" value="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"/>
+        <env name="RECAPTCHA_SECRET_KEY" value="6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"/>
+```
+
+Jetstreamが用意してるテストにも通る。
+
+## 本番環境での設定
+.envに本番用キーを設定。
+
+動作確認して完了。
+
+## reCAPTCHA v3を使うには
+`biscolab/laravel-recaptcha`はv2がデフォルトなのでconfigファイルを公開してv3を使うように変更。
 

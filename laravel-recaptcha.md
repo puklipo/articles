@@ -4,11 +4,14 @@ LaravelでreCAPTCHA
 Laravel標準のユーザー登録機能を使ってる人なら「最近ボットによる自動登録が増えてるなぁ」が分かると思う。  
 `/register`なURLとフォームが固定なので登録だけなら簡単。メール確認機能も併用すれば登録より先には進めないけど登録さえもさせたくないなら何らかの対策が必要。 
 社内の限られた数のユーザーが登録するだけなら共通の「合言葉」を決めて入力しないと登録できないようにするとか簡易的な対策はあるけど、誰でも登録できる一般的なサイトならreCAPTCHAを使った対策が普通。  
+
 reCAPTCHAで防げなかったら他の方法を検討。
 
 ## バージョン
 - Laravel 9.x(+Jetstream/Livewire)
 - PHP 8.1
+- Google reCAPTCHA v2
+- biscolab/laravel-recaptcha 5.3
 
 ## reCAPTCHA
 `biscolab/laravel-recaptcha`を使用。  
@@ -78,9 +81,9 @@ Jetstreamの場合は`app/Actions/Fortify/CreateNewUser.php`。
 ヘルパー使わずに`'g-recaptcha-response' => 'recaptcha',`でもいい。
 
 ## 開発環境で一旦確認
-Google側でドメインを設定すれば開発環境でも動くのでreCAPTCHA次第で登録が成功・失敗することを確認。
+Google側でドメインを設定すれば開発環境でも動くのでreCAPTCHA次第で登録が成功・失敗することを手動で確認。
 
-## 開発環境ではreCAPTCHA無効にする
+## 開発環境ではreCAPTCHA無効にする(v2)
 十分確認したら開発環境ではもう不要。  
 ここにテスト用のキーがあるので.envで設定すればreCAPTCHAに関係なくバリデーションは通るようなる。
 ```
@@ -116,5 +119,8 @@ Jetstreamが用意してるテストにも通る。
 動作確認して完了。
 
 ## reCAPTCHA v3を使うには
-`biscolab/laravel-recaptcha`はv2がデフォルトなのでconfigファイルを公開してv3を使うように変更。
+`biscolab/laravel-recaptcha`はv2がデフォルトなのでconfigファイルを公開してv3を使うように変更。  
+後はドキュメントを参照。  
+https://laravel-recaptcha-docs.biscolab.com/docs/how-to-use-v3
+
 

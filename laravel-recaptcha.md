@@ -18,7 +18,7 @@ reCAPTCHAで防げなかったら他の方法を検討。
 https://github.com/biscolab/laravel-recaptcha  
 https://laravel-recaptcha-docs.biscolab.com/
 
-## インストール
+### インストール
 ```
 composer require biscolab/laravel-recaptcha
 ```
@@ -30,6 +30,7 @@ RECAPTCHA_SECRET_KEY=
 ```
 
 ## Googleでキーを取得
+サイトキーとシークレットキー。
 https://www.google.com/recaptcha/
 
 よく見る「私はボットではありません」を使うなら`reCAPTCHA v2`→`「私はロボットではありません」チェックボックス`を選択。  

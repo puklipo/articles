@@ -119,9 +119,36 @@ Jetstreamが用意してるテストにも通る。
 
 動作確認して完了。
 
+## v2 invisibleを使うには
+configファイルを公開
+```
+php artisan vendor:publish --provider="Biscolab\ReCaptcha\ReCaptchaServiceProvider"
+```
+config/recaptcha.phpで`invisible`を使うように変更。
+```php
+'version'                      => 'invisible',
+```
+
+`htmlScriptTagJsApi()`はv2と同じ。
+
+`auth/register.blade.php`はformにidと
+```
+<form id="{{ getFormId() }}">
+```
+ボタンにdata-sitekeyなどを追加（Jetstreamの場合）
+```
+<x-jet-button class="ml-4 g-recaptcha"
+              data-callback="biscolabLaravelReCaptcha"
+              data-sitekey="{{ config('recaptcha.api_site_key') }}">
+    {{ __('Register') }}
+</x-jet-button>
+```
+Jetstreamで`htmlFormButton()`を使うとclassが大量なので自分でdata-sitekey追加するほうが良さそう。
+
+https://laravel-recaptcha-docs.biscolab.com/docs/how-to-use-v2#recaptcha-v2-invisible
+
 ## reCAPTCHA v3を使うには
 `biscolab/laravel-recaptcha`はv2がデフォルトなのでconfigファイルを公開してv3を使うように変更。  
 後はドキュメントを参照。  
 https://laravel-recaptcha-docs.biscolab.com/docs/how-to-use-v3
-
 

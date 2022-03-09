@@ -119,7 +119,7 @@ Jetstreamが用意してるテストにも通る。
 
 動作確認して完了。
 
-## v2 invisibleを使うには
+## reCAPTCHA v2 invisibleを使うには
 configファイルを公開
 ```
 php artisan vendor:publish --provider="Biscolab\ReCaptcha\ReCaptchaServiceProvider"

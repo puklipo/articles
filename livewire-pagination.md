@@ -121,6 +121,8 @@ import smoothscroll from 'smoothscroll-polyfill';
 
 smoothscroll.polyfill();
 ```
+**（追記：Safari15.4で対応されたのでpolyfillは不要になった）**
+
 
 `@page-updated.window`を書く場所を変えれば好きな位置にスクロールできる。
 

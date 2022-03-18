@@ -132,11 +132,11 @@ config/recaptcha.phpで`invisible`を使うように変更。
 `htmlScriptTagJsApi()`はv2と同じ。
 
 `auth/register.blade.php`はformにidと
-```
+```php
 <form id="{{ getFormId() }}">
 ```
 ボタンにdata-sitekeyなどを追加（Jetstreamの場合）
-```
+```php
 <x-jet-button class="ml-4 g-recaptcha"
               data-callback="biscolabLaravelReCaptcha"
               data-sitekey="{{ config('recaptcha.api_site_key') }}">

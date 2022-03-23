@@ -120,6 +120,10 @@ use Illuminate\Pagination\PaginationState;
 
 面倒なことを除けばLaravel側のページネーションは直ったけど今度はLivewire側のページネーションでエラーが出るようになった。
 
+後は`config/octane.php`のlistenersでリセットする方法がありそうだけど今はここまで。
+
+https://github.com/laravel/octane/blob/1.x/config/octane.php
+
 ## 現状の解決策
 「Livewireのページネーションを使うプロジェクトではページネーションを使うすべてのページでLivewireを使う」  
 ページネーションを使わないページでは関係ない。Laravelの通常のページネーションを使わないようにする。

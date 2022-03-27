@@ -120,10 +120,104 @@ use Illuminate\Pagination\PaginationState;
 
 面倒なことを除けばLaravel側のページネーションは直ったけど今度はLivewire側のページネーションでエラーが出るようになった。
 
-後は`config/octane.php`のlistenersでリセットする方法がありそうだけど今はここまで。
+## OctaneのListenerでリセット（最善策）
+`config/octane.php`でListenerを設定してリクエストごとに初期化するのが現状での解決策っぽい。
 
 https://github.com/laravel/octane/blob/1.x/config/octane.php
 
-## 現状の解決策
-「Livewireのページネーションを使うプロジェクトではページネーションを使うすべてのページでLivewireを使う」  
-ページネーションを使わないページでは関係ない。Laravelの通常のページネーションを使わないようにする。
+```php
+        RequestReceived::class => [
+            ...Octane::prepareApplicationForNextOperation(),
+            ...Octane::prepareApplicationForNextRequest(),
+            //
+        ],
+```
+
+流れを追っていくと`RequestReceived`イベント発生時に色々な初期化処理をしている。
+
+`prepareApplicationForNextOperation()`にはPrepareLivewireForNextOperation`があって
+
+https://github.com/laravel/octane/blob/1.x/src/Concerns/ProvidesDefaultConfigurationOptions.php
+
+`PrepareLivewireForNextOperation`ではLivewireの`flushState()`を呼んでいる。
+
+https://github.com/laravel/octane/blob/1.x/src/Listeners/PrepareLivewireForNextOperation.php
+
+`flushState()`ではページネーションはないので自分で行う。
+
+https://github.com/livewire/livewire/blob/e9f178bc4f1e671e562f9d2251aa07702b2c2260/src/LivewireManager.php#L460
+
+```
+sail art make:listener FlushPagination
+```
+もしくは
+```
+php artisan make:listener FlushPagination
+```
+
+FlushPagination.phpは
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use Illuminate\Pagination\PaginationState;
+use Illuminate\Pagination\Paginator;
+
+class FlushPagination
+{
+    /**
+     * Create the event listener.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     *
+     * @param  object  $event
+     * @return void
+     */
+    public function handle($event)
+    {
+        Paginator::useTailwind();
+        PaginationState::resolveUsing($event->sandbox);
+    }
+}
+```
+
+`config/octane.php`に追加。
+
+```php
+        RequestReceived::class => [
+            ...Octane::prepareApplicationForNextOperation(),
+            ...Octane::prepareApplicationForNextRequest(),
+            //
+            \App\Listeners\FlushPagination::class,
+        ],
+```
+
+`useTailwind()`は以下と同じ。Tailwindではないなら好きなように変更。
+
+```php
+Paginator::defaultView('pagination::tailwind');
+Paginator::defaultSimpleView('pagination::simple-tailwind');
+```
+
+`$event->sandbox`でも`app()`でも同じはず。
+
+これでviewの毎回指定は不要。
+```php
+{{ $posts->links() }}
+```
+
+ServiceProviderやコントローラーでの`PaginationState::resolveUsing()`も不要。
+
+LaravelのページネーションとLivewireのページネーションを使ったページを行き来してもエラーは出ない。
+
+普通に使って何も問題はなくなった。

@@ -135,7 +135,7 @@ https://github.com/laravel/octane/blob/1.x/config/octane.php
 
 流れを追っていくと`RequestReceived`イベント発生時に色々な初期化処理をしている。
 
-`prepareApplicationForNextOperation()`にはPrepareLivewireForNextOperation`があって
+`prepareApplicationForNextOperation()`には`PrepareLivewireForNextOperation`があって
 
 https://github.com/laravel/octane/blob/1.x/src/Concerns/ProvidesDefaultConfigurationOptions.php
 

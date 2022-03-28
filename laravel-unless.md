@@ -41,9 +41,20 @@ Laravel内部ではcontains()を反転してるだけ。
 $collection = collect([1, 2, 3]);
  
 $collection->unless(true, function ($collection) {
-    return $collection->push(4);
+    return $collection->push(4); //ここは実行されない
 });
+
+$collection->unless(false, function ($collection) {
+    return $collection->push(5); //ここは実行される
+});
+ 
+$collection->all();
+ 
+// [1, 2, 3, 5]
+// 結果は4はなく5だけ。
 ```
+
+検索フォームで条件が指定された時だけ絞り込むような時にwhen()が使える。
 
 ```php
 $role = $request->input('role');
@@ -54,6 +65,7 @@ $users = DB::table('users')
                 })
                 ->get();
 ```
+
 これのように`when($role`とは書きたくない。
 ```php
 ->when(filled($role),

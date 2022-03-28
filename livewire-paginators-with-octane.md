@@ -63,7 +63,7 @@ Octaneだとstaticプロパティなことが困る原因。
 1. Livewireのページネーションを先に表示。この時にstaticプロパティが上書きされる。Octaneでは次のリクエストでも上書きされたまま。
 2. Laravelの通常のページネーションを表示しても上書きされたstaticプロパティを元に表示されるのでエラーになる。Octaneでなければ毎回リセットされるので影響はない。
 
-## 完璧な解決策はなさそう
+## 試行錯誤
 
 ### viewが違うのは
 表示時に指定すればいいけど全部で指定は面倒。
@@ -147,6 +147,8 @@ https://github.com/laravel/octane/blob/1.x/src/Listeners/PrepareLivewireForNextO
 
 https://github.com/livewire/livewire/blob/e9f178bc4f1e671e562f9d2251aa07702b2c2260/src/LivewireManager.php#L460
 
+まずListenerを作成。
+
 ```
 sail art make:listener FlushPagination
 ```
@@ -155,7 +157,7 @@ sail art make:listener FlushPagination
 php artisan make:listener FlushPagination
 ```
 
-FlushPagination.phpは
+FlushPagination.phpは以下
 
 ```php
 <?php

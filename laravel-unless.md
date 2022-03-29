@@ -68,9 +68,9 @@ $users = DB::table('users')
 
 これのように`when($role`とは書きたくない。
 ```php
-->when(filled($role),
+->when(filled($role), function ($query, $b) use($role)) {
 ```
-empty()の逆としてfilled()で確認。
+empty()の逆としてfilled()で確認。$roleがそのまま渡らないので`use($role)`で別で渡す。
 ```php
 ->unless(blank($role),
 ```
@@ -82,13 +82,13 @@ https://laravel.com/docs/9.x/queries#conditional-clauses
 
 ついでに。この場面ではreturnの有無はどっちでも同じ。
 ```php
-->when($role, function ($query, $role) {
+->when(filled($role), function ($query) use($role) {
     return $query->where('role_id', $role);
 })
 ```
 なのでアロー関数で書いてもいい。
 ```php
-->when($role, fn ($query, $role) => $query->where('role_id', $role))
+->when(filled($role), fn ($query) => $query->where('role_id', $role))
 ```
 
 ## abort_unless()

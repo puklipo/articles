@@ -80,6 +80,17 @@ https://github.com/laravel/framework/blob/9.x/src/Illuminate/Conditionable/Trait
 https://laravel.com/docs/9.x/collections#method-unless  
 https://laravel.com/docs/9.x/queries#conditional-clauses
 
+ついでに。この場面ではreturnの有無はどっちでも同じ。
+```php
+                ->when($role, function ($query, $role) {
+                    return $query->where('role_id', $role);
+                })
+```
+なのでアロー関数で書いてもいい。
+```php
+                ->when($role, fn ($query, $role) => $query->where('role_id', $role))
+```
+
 ## abort_unless()
 ```php
 abort_unless(Auth::user()->isAdmin(), 403);

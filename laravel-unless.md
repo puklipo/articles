@@ -82,13 +82,13 @@ https://laravel.com/docs/9.x/queries#conditional-clauses
 
 ついでに。この場面ではreturnの有無はどっちでも同じ。
 ```php
-                ->when($role, function ($query, $role) {
-                    return $query->where('role_id', $role);
-                })
+->when($role, function ($query, $role) {
+    return $query->where('role_id', $role);
+})
 ```
 なのでアロー関数で書いてもいい。
 ```php
-                ->when($role, fn ($query, $role) => $query->where('role_id', $role))
+->when($role, fn ($query, $role) => $query->where('role_id', $role))
 ```
 
 ## abort_unless()

@@ -114,3 +114,9 @@ https://laravel.com/docs/9.x/helpers#method-abort-unless
 
 ## missing
 hasの逆でmissing。テストの`assertDatabaseMissing()`や`assertJsonMissing()`や、Requestの`$request->missing()`
+
+```php
+if ($request->missing('name')) {
+    //
+}
+```

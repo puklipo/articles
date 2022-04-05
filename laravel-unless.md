@@ -112,3 +112,5 @@ https://laravel.com/docs/9.x/helpers#method-abort-unless
 ```
 ここもLaravel内では!だけど「フレームワーク内のコードとユーザーランドのコードは違う」のでユーザーランドではやはり!は避けたい。
 
+## missing
+hasの逆でmissing。テストの`assertDatabaseMissing()`や`assertJsonMissing()`や、Requestの`$request->missing()`

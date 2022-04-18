@@ -35,6 +35,15 @@ Laravel内部ではcontains()を反転してるだけ。
     }
 ```
 
+## Eloquent / QueryBuilderのdoesntExist()
+```php
+if (DB::table('orders')->where('finalized', 1)->doesntExist()) {
+    // ...
+}
+```
+
+https://laravel.com/docs/9.x/queries#determining-if-records-exist
+
 ## Conditionable Traitのwhen()/unless()
 トレイトなので色々な所で使えるけどCollectionやQueryBuilderで使うことが多いかも。
 ```php

@@ -123,7 +123,7 @@ module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
-    'postcss-import': {}
+    'postcss-import': {},
   },
 }
 ```
@@ -152,3 +152,12 @@ npm run build
 
 ## 足りない機能
 Vite+laravel-vite-pluginでできないことは他のViteプラグイン（またはRollupプラグイン）で追加できるのでもう少し情報が揃えばmixを完全に置き換えられるだろう。
+
+例えばmix.copy()の代わりはこの辺りを使えば良さそう。
+
+- https://github.com/sapphi-red/vite-plugin-static-copy
+- https://github.com/mistjs/vite-plugin-copy-files
+
+Vite標準のやり方はpublicディレクトリからのコピーだけどLaravelでは使いにくいのでlaravel-vite-pluginで無効化されている。
+
+- https://ja.vitejs.dev/guide/assets.html#public-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA

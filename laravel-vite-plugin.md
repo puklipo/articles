@@ -42,10 +42,10 @@ npm install --save-dev vite laravel-vite-plugin autoprefixer
 このファイルで色々設定する部分をプラグインが代行してるだけ。
 
 ```js
-import { defineConfig } from 'vite'
-import laravel from 'laravel-vite-plugin'
-// import react from '@vitejs/plugin-react'
-// import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+// import react from '@vitejs/plugin-react';
+// import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
@@ -63,7 +63,7 @@ export default defineConfig({
         //     },
         // }),
     ],
-})
+});
 ```
 
 ### npm scriptを変更

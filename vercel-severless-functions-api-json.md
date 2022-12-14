@@ -147,3 +147,8 @@ class handler(BaseHTTPRequestHandler):
 APIキーが必要なら環境変数から。
 
 Vercelで公式に対応してる言語なら余計なことは不要で簡単。
+
+## 最新版
+Qiitaの記事は後から修正しないので最新版はここで。
+
+https://github.com/pop-culture-studio/articles/blob/main/vercel-severless-functions-api-json.md

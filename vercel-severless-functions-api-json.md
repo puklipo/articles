@@ -1,7 +1,7 @@
 Vercel 外部WebAPIから取得したjsonをそのまま返すサーバーレス関数 (Node.js/TypeScript/Golang/Ruby/Python版)
 ----
 
-サーバーレス関数の説明は書かない。
+サーバーレス関数の説明は書かない。  
 https://vercel.com/docs/concepts/functions/serverless-functions
 
 ## 対象

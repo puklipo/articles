@@ -139,7 +139,7 @@ Ubuntu
 
 ### PHP
 artisanやcomposerのためなのでcliだけでもいい。  
-SailのDockerfileを見て同じものをインストール。全部は不要なはずだけどcomposer install時に必要なこともあるので一応インストール。足りなければ後で追加。
+SailのDockerfileを見て同じものをインストール。全部は不要なはずだけどcomposer install時に必要なこともあるので一応インストール。足りなければ後で追加。  
 https://github.com/laravel/sail/tree/1.x/runtimes
 
 ```shell

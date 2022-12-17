@@ -262,3 +262,9 @@ PhpStormやGitHub Desktopの話は↑と同じ。
 - その他のファイルの置き場所、ターミナルでのコマンドの実行などはすべてWSL側。ファイルはWindows側に置いてもいいけど実際に使うと速度に差があってWSL側がいいと分かる。
 - PhpStormでインタープリターの選択が出てきたらWSLを使うように設定する。ここを徹底しないと上手く動かない。新しい環境では最初だけ色々設定が必要だけど落ち着いたら意識せず使えるようになる。
 - Windows環境ではWSLさえ使えれば困らない。WSLがなかった頃と比べると別世界。
+
+## 余談：リモート開発
+PhpStormを使うならここまでの使い方で十分だけどPhpStormにもVS codeにもリモート開発機能がある。VS codeをメインに使っていくならリモート開発を使ったほうがいい。
+
+- https://pleiades.io/help/phpstorm/remote-development-starting-page.html
+- https://learn.microsoft.com/ja-jp/windows/wsl/tutorials/wsl-vscode

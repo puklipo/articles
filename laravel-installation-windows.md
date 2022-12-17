@@ -40,7 +40,7 @@ https://www.jetbrains.com/ja-jp/phpstorm/download/
 普段の開発はPhpStormを使うけどちょっとした変更程度はVS codeを使うこともあるしGitHub上で直接変更することもある。
 
 ## データベースアプリ
-ちょうどいいアプリがないのでデータベースの表示はPhpStormを使用。
+ちょうどいいアプリがないのでデータベースの表示・簡易編集はPhpStormを使用。
 
 sailで起動後、
 

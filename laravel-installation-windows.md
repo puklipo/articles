@@ -9,7 +9,7 @@ Laravel 0からの開発環境構築 Windows11版
 ## 対象読者
 プログラミング初心者は対象じゃない。Laravelは初心者が使うものじゃない。
 
-すでに別のPCでLaravelを使っている人が別のPCでも開発できるようにする場合を想定。  
+すでにLaravelを使っていて大量のLaravelプロジェクトを抱えてる人が別の新しいPCでも開発する場合を想定。  
 職場と自宅、WindowsとMacなど複数のPCでの併用を前提。  
 プロが対象なので有料のツールも遠慮なく含める。
 
@@ -225,6 +225,7 @@ cd test
 composer install
 cp .env.example .env
 php artisan key:generate
+# 必要なら.envを編集
 
 npm install
 npm run build
@@ -267,6 +268,7 @@ PhpStormやGitHub Desktopの話は↑と同じ。
 ## ポイント
 - Chrome, PhpStorm, GitHub Desktop, VS codeなどのアプリはWindows側で使う。
 - その他のファイルの置き場所、ターミナルでのコマンドの実行などはすべてWSL側。ファイルはWindows側に置いてもいいけど実際に使うと速度に差があってWSL側がいいと分かる。
+- WSLにインストールしたphp, composer, npmはすべてのLaravelプロジェクト共通で使う。installやupdateに使うだけなので常に最新バージョンでいい。プロジェクトごとの分離した環境はsailで作る。DBなどは分離。
 - PhpStormでインタープリターの選択が出てきたらWSLを使うように設定する。ここを徹底しないと上手く動かない。新しい環境では最初だけ色々設定が必要だけど落ち着いたら意識せず使えるようになる。
 - Windows環境ではWSLさえ使えれば困らない。WSLがなかった頃と比べると別世界。
 

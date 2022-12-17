@@ -238,8 +238,9 @@ https://pleiades.io/help/phpstorm/configuring-remote-interpreters.html
 Windows側  
 GitHub Desktopにcloneしたフォルダを追加。  
 Add local repository -> Choose  
-この時普通にフォルダを選択しようとしても最初は出て来ないのでまず`\\wsl$\Ubuntu\home`を表示してからcloneしたフォルダまで進める。
-Windows側からWSLのファイルを読んでいるので追加時に警告が出るけど問題ないので「add an exception for this directory」を選んで進めて追加する。
+この時普通にフォルダを選択しようとしても最初は出て来ないのでまず`\\wsl$\Ubuntu\home`を表示してからcloneしたフォルダまで進める。  
+Windows側からWSLのファイルを読んでいるので追加時に警告が出るけど問題ないので「add an exception for this directory」を選んで進めて追加する。  
+PhpStormで開く時も同様。
 
 PhpStormでコードを書いて、gitはGitHub Desktopを使う、コマンドはターミナル、といういつもの開発体制が整う。composerやnpmのスクリプトはPhpStormから実行。
 

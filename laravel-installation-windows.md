@@ -269,6 +269,7 @@ PhpStormやGitHub Desktopの話は↑と同じ。
 - Chrome, PhpStorm, GitHub Desktop, VS codeなどのアプリはWindows側で使う。
 - その他のファイルの置き場所、ターミナルでのコマンドの実行などはすべてWSL側。ファイルはWindows側に置いてもいいけど実際に使うと速度に差があってWSL側がいいと分かる。
 - WSLにインストールしたphp, composer, npmはすべてのLaravelプロジェクト共通で使う。installやupdateに使うだけなので常に最新バージョンでいい。プロジェクトごとの分離した環境はsailで作る。DBなどは分離。
+- テストはWSLのphpとプロジェクトにインストールしたphpunitでPhpStormの機能で実行。カバレッジ付きで実行すればコードカバレッジの表示もできる。
 - PhpStormでインタープリターの選択が出てきたらWSLを使うように設定する。ここを徹底しないと上手く動かない。新しい環境では最初だけ色々設定が必要だけど落ち着いたら意識せず使えるようになる。
 - Windows環境ではWSLさえ使えれば困らない。WSLがなかった頃と比べると別世界。
 

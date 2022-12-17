@@ -163,6 +163,11 @@ sudo apt-get install php8.2-cli php8.2-dev \
 php -v
 ```
 
+composer install時に`ext-***`が足りないみたいなエラーが出た時
+```shell
+sudo apt-get install php8.2-***
+```
+
 ### composer
 https://getcomposer.org/download/
 

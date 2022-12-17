@@ -3,7 +3,7 @@ Laravel 0からの開発環境構築 Windows11版
 
 何もインストールしてない新しいWindows PCでLaravelの開発ができるまでの環境を作る。
 
-最終更新日；2022年12月  
+最終更新日：2022年12月  
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 対象読者
@@ -31,7 +31,7 @@ https://desktop.github.com/
 ## VS code
 https://code.visualstudio.com/download
 
-VS codeからWindows版gitのインストールを要求されるかもしれない。あまり使わないけど念のためインストール。
+VS codeからWindows版gitのインストールを要求されるかもしれない。あまり使わないけど念のためインストール。  
 https://git-scm.com/downloads
 
 ## PhpStorm
@@ -43,10 +43,12 @@ https://www.jetbrains.com/ja-jp/phpstorm/download/
 ちょうどいいアプリがないのでデータベースの表示はPhpStormを使用。
 
 sailで起動後、
+
 - ホスト：localhost
 - ポート：3306
 - ユーザーとパスワード：.envで設定したもの。
 - データベース：.envのDB_DATABASEで設定したもの。
+- 
 で接続可能。
 
 ## Windows Subsystem for Linux
@@ -65,7 +67,7 @@ DXCore バージョン:
 Windowsバージョン: 
 ```
 
-Windows Terminal(PowerShell)で`wsl --install Ubuntu`を実行。
+Windows Terminal(PowerShell)で`wsl --install Ubuntu`を実行。  
 ダウンロード後、Ubuntu用の新しいユーザー名とパスワードを決定。
 
 ```shell
@@ -90,7 +92,7 @@ WSLを使っているとパーミッションのエラーに遭遇しやすい�
 - WSL内：通常のUbuntuと同じ`/` `/home/`
 
 ### GitHub Desktopでgit cloneしたらcomposer installでエラーが出る時の修正方法
-（WSLインストール直後に発生しやすいかも。一度再起動後に発生しなければ気にしなくていい）
+**（WSLインストール直後に発生しやすいかも。一度再起動後に発生しなければ気にしなくていい）**
 
 前提。  
 WSLのUbuntuをインストール時に作った新しいユーザーをuserとするとWSL側のホームは`/home/user/`。  

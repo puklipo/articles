@@ -48,7 +48,7 @@ sailで起動後、
 - ポート：3306
 - ユーザーとパスワード：.envで設定したもの。
 - データベース：.envのDB_DATABASEで設定したもの。
-- 
+
 で接続可能。
 
 ## Windows Subsystem for Linux

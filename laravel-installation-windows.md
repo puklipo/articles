@@ -228,6 +228,8 @@ sail up -d
 
 # migrateなどDBに接続するコマンドは必ずsail内で実行
 sail art migrate
+# 他のmakeコマンドなどはsail外で使ってもいい。Dockerを使わないので若干早いしsail起動前でも使える。
+php artisan make:controller TestController
 
 sail down
 ```

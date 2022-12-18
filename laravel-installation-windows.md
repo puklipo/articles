@@ -91,7 +91,7 @@ Windows Terminalの設定で既存のプロファイルをUbuntuにしておく�
 WSLを使っているとパーミッションのエラーに遭遇しやすい。「Windows側」なのか「WSLのUbuntu側」なのか常に意識してないと間違えやすい。
 
 - Windows側からWSL側のファイルへのアクセス：`\\wsl$`もしくは`\\wsl.localhost\`
-- WSL側からWindows側のファイル：`/mnt/c/`
+- WSL側からWindows側のファイル：`/mnt/c/` `/mnt/d/`
 - WSL内：通常のUbuntuと同じ`/` `/home/`
 
 ### GitHub Desktopでgit cloneしたらcomposer installでエラーが出る時の修正方法

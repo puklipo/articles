@@ -257,7 +257,21 @@ Add local repository -> Choose
 Windows側からWSLのファイルを読んでいるので追加時に警告が出るけど問題ないので「add an exception for this directory」を選んで進めて追加する。  
 PhpStormで開く時も同様。
 
-PhpStormでコードを書いて、gitはGitHub Desktopを使う、コマンドはターミナル、といういつもの開発体制が整う。composerやnpmのスクリプトはPhpStormから実行。
+PhpStormでコードを書いて、gitはGitHub Desktopを使う、コマンドはターミナル、といういつもの開発体制が整う。
+
+composerやnpmのスクリプトはPhpStormから実行。  
+composer.jsonのscriptsにsailのupとdownを書いておけばsailの起動・終了もPhpStormからさっとできる。
+```json
+        "sail:up": "./vendor/bin/sail up -d",
+        "sail:down": "./vendor/bin/sail down",
+```
+もう一歩進めてsail up後にide-helper:modelsも実行。DBへの接続が必要なのでup直後に毎回実行が効率的。
+```json
+        "sail:up": [
+            "./vendor/bin/sail up -d",
+            "./vendor/bin/sail art ide-helper:models -N"
+        ],
+```
 
 ## 基本の使い方2 Laravelプロジェクトを新規作成
 Laravelのドキュメント通りなので変わった所はない。

@@ -82,6 +82,8 @@ passwd: password updated successfully
 Installation successful!
 ```
 
+以前と比べるとWSLのインストールもかなり簡単になっている。Laravelを使うならこのくらいはできて当然。
+
 これ以降のコマンドは基本的にWSLのUbuntuで実行。  
 Windows Terminalの設定で既存のプロファイルをUbuntuにしておく。
 
@@ -247,7 +249,6 @@ sail down
 clone以降はすぐにPhpStormで開いて続きはPhpStormのターミナルやcomposer install機能を使ってもいい。  
 PhpStormでcomposerやnpmコマンドを使う場合、インタープリターの選択画面が出る。この時にWSL内のphpやnodeを使うように設定する。
 https://pleiades.io/help/phpstorm/configuring-remote-interpreters.html
-
 
 Windows側  
 GitHub Desktopにcloneしたフォルダを追加。  

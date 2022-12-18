@@ -220,7 +220,7 @@ sail version
 ## 基本の使い方1 既存のLaravelプロジェクト
 GitHubにLaravelプロジェクトがある状態から開始。
 
-先に：↑のほうの所有者の問題がなければGitHub Desktopからcloneしてもいい。これが一番簡単。
+先に：↑のほうの所有者の問題がなければGitHub Desktopからcloneしてもいい。これが一番簡単。保存先は必ずWSL側にする。
 
 以降はターミナルからcloneする場合の話。
 

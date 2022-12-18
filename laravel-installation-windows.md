@@ -10,13 +10,14 @@ Laravel 0からの開発環境構築 Windows11版
 プログラミング初心者は対象じゃない。Laravelは初心者が使うものじゃない。
 
 すでにLaravelを使っていて大量のLaravelプロジェクトを抱えてる人が別の新しいPCでも開発する場合を想定。  
-職場と自宅、WindowsとMacなど複数のPCでの併用を前提。  
+職場と自宅、WindowsとMacなど複数のPCで併用する前提。  
 プロが対象なので有料のツールも遠慮なく含める。
 
 ## Laravelを使う前に必須な知識
 - 一般以上のPCスキル
 - Webに関する幅広い知識
 - 素のPHP。最新バージョンまで。composerとPSR。
+- git / GitHub
 - フロントエンドの知識。最低限node.js/npmや「JavaScriptもビルドして使うようになった」という現代の常識は必須。html→PHPと進んできた初心者が躓くのはフロントの知識が足りてないのが主な原因。
 - Linuxの知識。最低でも「`php -v`はターミナルで実行する」が分かる程度。
 
@@ -40,7 +41,7 @@ https://www.jetbrains.com/ja-jp/phpstorm/download/
 普段の開発はPhpStormを使うけどちょっとした変更程度はVS codeを使うこともあるしGitHub上で直接変更することもある。
 
 ## データベースアプリ
-ちょうどいいアプリがないのでデータベースの表示・簡易編集はPhpStormを使用。
+ちょうどいいアプリがないのでデータベース(MySQL)の表示・簡易編集はPhpStormを使用。
 
 sailで起動後、
 
@@ -217,6 +218,10 @@ sail version
 ## 基本の使い方1 既存のLaravelプロジェクト
 GitHubにLaravelプロジェクトがある状態から開始。
 
+先に：↑のほうの所有者の問題がなければGitHub Desktopからcloneしてもいい。これが一番簡単。
+
+以降はターミナルからcloneする場合の話。
+
 WSL側
 ```shell
 cd ~/GitHub/
@@ -242,6 +247,7 @@ sail down
 clone以降はすぐにPhpStormで開いて続きはPhpStormのターミナルやcomposer install機能を使ってもいい。  
 PhpStormでcomposerやnpmコマンドを使う場合、インタープリターの選択画面が出る。この時にWSL内のphpやnodeを使うように設定する。
 https://pleiades.io/help/phpstorm/configuring-remote-interpreters.html
+
 
 Windows側  
 GitHub Desktopにcloneしたフォルダを追加。  
@@ -281,3 +287,7 @@ PhpStormを使うならここまでの使い方で十分だけどPhpStormにもV
 
 - https://pleiades.io/help/phpstorm/remote-development-starting-page.html
 - https://learn.microsoft.com/ja-jp/windows/wsl/tutorials/wsl-vscode
+
+## 余談：初心者がやりがちだけどやってはいけないこと
+- XAMPP, phpMyAdminなどは「初心者が書いた間違った本やブログ」に騙された初心者がインストールしようとするけどLaravelユーザーが使うことはないので一切不要。
+- Dockerコンテナ内で作業しない。sail登場前からDockerやHomestead(Vagrant)の内部に入ってコマンドを実行する使い方してる初心者が多い。これやると普段使ってるターミナルとは別の環境で作業することになるのでとても不便。考え方が逆。コンテナの外の使い慣れたターミナルからコンテナ内のコマンドを実行する使い方をすべき。Laravel公式のsailはこの辺り良く分かっていて`sail artisan ...`はコンテナの外で実行。コンテナ内で何か作業することは全くない。

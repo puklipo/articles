@@ -84,7 +84,7 @@ Installation successful!
 
 以前と比べるとWSLのインストールもかなり簡単になっている。Laravelを使うならこのくらいはできて当然。
 
-これ以降のコマンドは基本的にWSLのUbuntuで実行。  
+これ以降のコマンドはWSLのUbuntuで実行。  
 Windows Terminalの設定で既存のプロファイルをUbuntuにしておく。
 
 ## WSLでのファイルの扱いを理解する
@@ -104,7 +104,7 @@ GitHubからcloneする作業場所を`/home/user/GitHub/`に作ったとする�
 WSL側の`/home/user/GitHub/`はWindows側からは`\\wsl.localhost\Ubuntu\home\user\GitHub\`。  
 Windows側のGitHub Desktopで`\\wsl.localhost\Ubuntu\home\user\GitHub\`にcloneするとファイルの所有者がrootになっていてuserからは書き込みできないのでcomposer installでエラーが出る。
 
-確認。rootがあれば所有者がroot
+確認。rootがあれば所有者がroot。userなら問題ないので以降は不要。
 ```shell
 cd ~/GitHub/
 ll

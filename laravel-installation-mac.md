@@ -129,7 +129,7 @@ node -v
 npm -v
 ```
 
-## バージョンアップ作業
+### バージョンアップ作業
 ```shell
 brew update
 brew upgrade

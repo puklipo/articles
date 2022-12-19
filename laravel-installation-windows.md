@@ -221,7 +221,7 @@ node -v
 npm -v
 ```
 
-## バージョンアップ作業
+### バージョンアップ作業
 ```shell
 sudo apt update
 sudo apt upgrade

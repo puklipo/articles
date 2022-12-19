@@ -29,6 +29,11 @@ https://www.google.com/intl/ja_jp/chrome/
 ## GitHub Desktop
 https://desktop.github.com/
 
+## SourceTree
+https://www.sourcetreeapp.com/
+
+GitHub Desktopだけでは足りないことがあるのでSourceTreeもインストール。
+
 ## VS code
 https://code.visualstudio.com/download
 

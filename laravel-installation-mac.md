@@ -83,7 +83,13 @@ https://brew.sh/index_ja
 brew -v
 ```
 
-PATHの設定が必要ならしておく。
+PATHの設定が必要ならしておく。  
+.zshrc
+```shell
+export PATH=/usr/local/bin:$PATH
+
+export PATH=~/.composer/vendor/bin:$PATH
+```
 
 ## Homebrewでいろいろインストール
 「開発環境は全部Docker内に閉じ込める」なんて現実的には机上の空論。そんな使い方は不便すぎるのでDocker外の手元でもphp,composer,npmくらいは使えるようにしておく。
@@ -104,7 +110,14 @@ php -v
 brew install composer
 ```
 ```shell
-composer -V
+composer
+```
+
+`laravel/installer`をインストールするなら。最近はlaravel.build使うので入れなくてもいい。
+```shell
+composer global require laravel/installer
+
+laravel
 ```
 
 ### node.js

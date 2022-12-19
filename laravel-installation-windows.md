@@ -197,6 +197,17 @@ docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w var/www/html
 ```
 これよりもPhpStormでインストールできたほうが楽。
 
+`laravel/installer`をインストールするなら。最近はlaravel.build使うので入れなくてもいい。
+```shell
+composer global require laravel/installer
+
+laravel
+```
+globalにインストールしたcomposerコマンドを使うために.bashrcでPATHの設定も必要。
+```shell
+export PATH=~/.composer/vendor/bin:$PATH
+```
+
 ### node.js
 https://github.com/nodesource/distributions/blob/master/README.md
 

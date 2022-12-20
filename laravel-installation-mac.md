@@ -105,6 +105,23 @@ brew install php
 php -v
 ```
 
+### Xdebug
+PHPの後にpeclでインストール。
+
+```shell
+pecl install xdebug
+```
+
+Apple Siliconマシンで問題が発生した場合はページの説明を読む。  
+https://xdebug.org/docs/install#pecl
+
+PhpStormでXdebugをオンデマンドモードで使うには。  
+https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode
+Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
+
+- peclでインストール後は勝手にXdebugが有効化されるのでphp.iniを編集して無効にする。
+- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。
+
 ### composer
 ```shell
 brew install composer

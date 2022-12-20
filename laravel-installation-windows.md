@@ -176,7 +176,7 @@ composer install時に`ext-***`が足りないみたいなエラーが出た時
 sudo apt-get install php8.2-***
 ```
 
-### Xdebugをオンデマンドモードで使う
+### PhpStormでXdebugをオンデマンドモードで使う
 https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode  
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 

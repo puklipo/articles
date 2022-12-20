@@ -120,7 +120,8 @@ https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 
 - peclでインストール後は勝手にXdebugが有効化されるのでphp.iniを編集して無効にする。
-- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。
+  - `php --ini`でphp.iniの場所を確認。PHP8.2なら`/usr/local/etc/php/8.2/php.ini`。1行目の`zend_extension="xdebug.so"`を削除するか`;zend_extension="xdebug.so"`で無効にする。
+- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.2なら`/usr/local/Cellar/php/8.2.0/pecl/20220829/xdebug.so`
 
 ### composer
 ```shell

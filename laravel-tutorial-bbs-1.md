@@ -134,6 +134,18 @@ https://laravel.com/docs/9.x/routing
 ### ヒント1
 本当の入り口は`/public/index.php`だけど入門段階でもその後でもほとんど気にすることはないのでルーティングが入り口と思っていていい。
 
+### ヒント2
+より正確にはLaravelの入り口は2つある。
+
+- Http : `/public/index.php`から`/routes/`→`/app/Http/`に進むHttpのルート。
+- Console : artisanから`/app/Console/`に進むConsoleのルート。
+
+HttpとConsoleは明確に分かれる。Http側からartisanコマンドの実行はできるけどConsoleからHttpのclassを使うことはない。artisanコマンドからControllerやRequestを使おうとしてるなら完全に使い方を間違えている。
+
+HttpとConsole以外の`/app/`内のclassは両方から使える。
+
+この辺りも理解せず使うと初心者が混乱するところ。
+
 ## コントローラー
 コントローラーの前にこの辺でスターターキットbreezeをインストール。
 ```shell

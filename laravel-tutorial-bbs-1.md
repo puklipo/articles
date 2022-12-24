@@ -34,3 +34,56 @@ Laravel入門 いにしえの掲示板を作る パート1
 Laravelの標準的な使い方を知りたい人。
 
 「Laravel入門」であって「プログラミング入門」ではないのでプログラミング初心者は完全に対象外。Laravelの前にPHPや他の言語で基礎を覚えるのが先に必須。
+
+## 新規プロジェクト作成
+最初に
+- WindowsならWSL側のホームに作業用のディレクトリ(`Sites`等なんでもいい)を作る。
+- Macなら元からある`Sites`を使う。
+
+この部分は自由なので別にどこでもいい。説明不足な記事だといきなりホームにLaravelプロジェクトを作ってしまうことがあるので作業場所を最初に決めておく。今後のプロジェクトも全部ここに保存。
+
+ターミナルで作業場所に移動してプロジェクト作成コマンドを実行。  
+
+```shell
+cd ~/Sites/
+curl -s "https://laravel.build/laravel-bbs" | bash
+```
+Dockerイメージのビルドで数分かかることもあるのでしばらく待つ。`Thank you!`の表示が出れば完了。
+```shell
+Thank you! We hope you build something incredible. Dive in with: cd laravel-bbs && ./vendor/bin/sail up
+```
+
+新しく作られたプロジェクトのディレクトリに移動。これ以降の作業場所は`~/Sites/laravel-bbs/`
+```shell
+cd laravel-bbs/
+```
+「Laravelが正常にインストールできていること」と「ローカルのPHPが正常に動くこと」の確認にLaravelのバージョン表示。
+```shell
+php artisan --version
+```
+laravel.buildで作成した場合は全部準備万端なのでそのままsail起動可能。
+```shell
+sail up -d
+```
+ブラウザで http://localhost/ が表示できれば新規プロジェクト作成は完了。
+
+終了はstopかdown
+```shell
+sail down
+```
+
+「全部sail(Docker)から使う」なんて不便なことはしないのでローカルのPHPやnpmとsailは併用していく。
+
+### ヒント1
+作成方法はlaravel.build以外にも`composer create-project laravel/laravel example-app`や`laravel/installer`を使う方法がある。それぞれ微妙に違うけど基本的にはlaravel.buildを使えばいい。
+
+### ヒント2
+laravel.buildで実際に何をやっているかはここで確認。  
+https://github.com/laravel/sail-server/blob/master/resources/scripts/php.sh
+
+### ヒント3
+「Dockerを知らなくてもSailは使える」なんてことはないのでDockerについても学習する。
+
+## インストール直後のLaravelプロジェクトを確認
+ここからはPhpStormでプロジェクトを開いて進める。
+

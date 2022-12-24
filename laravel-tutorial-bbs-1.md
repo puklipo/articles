@@ -186,7 +186,7 @@ LaravelでのDBはQuery BuilderとEloquentがある。本やドキュメント�
 
 現実的にLaravelを使う時はEloquentこそが主役。「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」のレスポンスはDB内のデータから作ることが当然多い。
 
-なのでEloquentモデルを作る時にコントローラー等の他のファイルも同時に作る使い方をすることが多い。`--all`での指定は余計なものが多い。最低でも`-m`でマイグレーションファイルは作る。これで作ればテーブル名を間違えることがない。
+なのでEloquentモデルを作る時にコントローラー等の他のファイルも同時に作る使い方をする。最低でも`-m`でマイグレーションファイルは作る。これで作ればテーブル名を間違えることがない。
 ```shell
 php artisan make:model Post --all
 php artisan make:model Post -m

@@ -187,6 +187,7 @@ LaravelでのDBはQuery BuilderとEloquentがある。本やドキュメント�
 現実的にLaravelを使う時はEloquentこそが主役。「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」のレスポンスはDB内のデータから作ることが当然多い。
 
 なのでEloquentモデルを作る時にコントローラー等の他のファイルも同時に作る使い方をする。最低でも`-m`でマイグレーションファイルは作る。これで作ればテーブル名を間違えることがない。
+
 ```shell
 php artisan make:model Post --all
 php artisan make:model Post -m
@@ -198,6 +199,7 @@ DB周りは情報量が膨大なのでここで書いても仕方がない。
 
 ### ヒント1
 初心者に多い間違い。モデルの$tableは不要。PostとpostsならLaravelの規約から自動的に決まるので書かなくていい。
+
 ```php
 class Post extends Model
 {
@@ -205,7 +207,7 @@ class Post extends Model
 }
 ```
 
-$tableが必要なのは自動では決まらないテーブル名を使ってる時。ただしLaravelで新規に作ってるのにこんな使い方してることが間違いなので合わせたほうがいい。
+`$table`が必要なのは自動では決まらないテーブル名を使ってる時。ただしLaravelで新規に作ってるのにこんな使い方してることが間違いなので合わせたほうがいい。
 
 ```php
 class Post extends Model
@@ -213,3 +215,29 @@ class Post extends Model
     protected $table = 'blogs';
 }
 ```
+
+## フロントのこと
+今回はJavaScriptは使わないけどcssのために多少の説明が必要。
+
+- JavaScript : LaravelでのJSは`/resources/js/`に置く。
+- CSS : `/resources/js/` Tailwindなのでここを扱うことはほとんどない。Bladeに書く。
+
+「JSやCSSもビルドして使うようになった」はLaravelとは関係ないフロントの常識だけどこれが分かってないとLaravelも使えない。
+
+Bladeのcssを変更したらbuildコマンドを実行。
+
+```shell
+npm run build
+```
+
+これが面倒な場合、開発中に限りdevコマンドでもいい。
+```shell
+npm run dev
+```
+サーバーとして動き続ける。Bladeなどを変更するたびにブラウザが自動でリロードするようになる。
+終了はCtrl+C。devコマンドを終了したらbuildで再生成。
+
+今後の説明では省略するけど開発中はdevを動かしている。
+
+### ヒント1
+ビルドしたjs/cssファイルは`/public/build/`内に作られる。変更するのはresources内のファイル、`/public/build/`内は絶対に直接変更しない。buildコマンドの実行で全部上書きされるので変更してもすべて消える。

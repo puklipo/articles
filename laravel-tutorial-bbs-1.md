@@ -196,3 +196,20 @@ DB周りは情報量が膨大なのでここで書いても仕方がない。
 
 「Eloquentを使う」と「リレーションを覚える」が最低でも必要なこと。
 
+### ヒント1
+初心者に多い間違い。モデルの$tableは不要。PostとpostsならLaravelの規約から自動的に決まるので書かなくていい。
+```php
+class Post extends Model
+{
+    protected $table = 'posts';
+}
+```
+
+$tableが必要なのは自動では決まらないテーブル名を使ってる時。ただしLaravelで新規に作ってるのにこんな使い方してることが間違いなので合わせたほうがいい。
+
+```php
+class Post extends Model
+{
+    protected $table = 'blogs';
+}
+```

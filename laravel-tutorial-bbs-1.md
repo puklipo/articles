@@ -87,3 +87,109 @@ https://github.com/laravel/sail-server/blob/master/resources/scripts/php.sh
 ## インストール直後のLaravelプロジェクトを確認
 ここからはPhpStormでプロジェクトを開いて進める。
 
+掲示板の前にLaravelの考え方の説明が必要。
+
+Laravelへの入門はまずこの段階のプロジェクトを隅々まで観察する。「Laravelはこう使うもの」という方向性を示している。
+
+見るところ
+
+- composer.json : `"laravel/framework": "^9.19",` Laravelのメジャーバージョンを確認。新規なら最新バージョンなので関係ないけど既存のプロジェクトを見る時はどのバージョンなのかが重要。
+- routes/web.php : ルーティングを見ればプロジェクトのことは大体分かる。
+
+新規のroutes/web.php
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+```
+`/`は http://localhost/ の最後の`/`のこと。このルーティングは「http://localhost/ がリクエストされたら`/resouces/views/welcome.blade.php`を表示する」って意味。  
+ルーティングの書き方・読み方は覚えるだけなので重要ではない。
+
+この段階で覚えるべきは「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」ってこと。これが頭にないと全体の処理の流れを把握できず何をやっているか分からなくなる。
+
+HTTPリクエストを受け取った後最初に来るのはルーティングなのでLaravelの入り口はルーティング。
+
+公式ドキュメントではThe Basicsの一つ目にRoutingがあるくらい重要項目。  
+https://laravel.com/docs/9.x/routing
+
+重要なルーティングだけどあまりにも基本すぎて理解せずに使ってる人は多い。書き方・読み方は簡単なので使えるけど「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」を理解してないと結局は何のためにルーティングを書いてるのか分からなくなる。
+
+新規のroutes/web.phpで「リクエストを受け取ってレスポンスを返す」は完結している。別に全部web.phpに書いてもLaravelは使えるって認識は持っておく。でも全部web.phpに書くと不便なので別のclassに分けたいって要望から出てくるのが次のコントローラー。
+
+### ヒント1
+本当の入り口は`/public/index.php`だけど入門段階でもその後でもほとんど気にすることはないのでルーティングが入り口と思っていていい。
+
+## コントローラー
+コントローラーの前にこの辺でスターターキットbreezeをインストール。
+```shell
+composer require laravel/breeze --dev
+
+php artisan breeze:install
+```
+
+web.phpが書き換わったり色々ファイルが増える。スターターキットはユーザー登録機能が用意されていて便利だけど新規のインストール直後とは変わってしまう。
+
+breezeで増えたファイルを見ればコントローラーの使い方は分かる。
+
+ここで覚えるべきは「**LaravelのコントローラーはContorollerという名前が付いてるだけのただのclass**」「**routes/web.phpに全部書くと長いのでclassに分けてるだけって認識**」
+
+コントローラーの作成は基本的にはシングルアクションコントローラーかリソースコントローラーの2択。初心者がこれ以外のコントローラーの使い方すると一つのコントローラーにいくつもメソッドを増やしてあっという間にファットコントローラーの出来上がり。
+
+```shell
+php artisan make:controller Comment/CreateController --invokable
+```
+```php
+use App\Http\Controllers\Comment\CreateController;
+
+Route:get('test', CreateController::class);
+```
+
+```shell
+php artisan make:controller PostController --resource
+```
+```php
+use App\Http\Controllers\PostController;
+
+Route:resource('post', PostController::class);
+```
+
+## ヒント1
+「MVC」なんて一切気にしなくていい。Laravelのドキュメント内に「MVC」なんて言葉は一度も出て来ない。
+
+### ヒント2
+スターターキットはJetstreamもあるけど入門段階で使うには複雑すぎる。最初はbreezeのblade stackでいい。
+
+### ヒント3
+旧バージョンのLaravelではまず`php artisan make:auth`でユーザー登録機能を作成していた。その後`make:auth`が`laravel/ui`に分離された。さらにその後JetstreamとBreezeがスターターキットとして用意されたので`laravel/ui`を使うことはもうない。ころころ変わった経緯があるので古い情報に騙されないように。
+
+## データベースとEloquent
+Perl掲示板でDB使うことはなかった。DB使うようになったのはPHP以降。
+
+Laravelでは当然DBを使う。
+
+LaravelでのDBはQuery BuilderとEloquentがある。本やドキュメントを途中まで読んだ初心者がQuery Builderだけ使ってる事例が多いけどもう少し先まで読もう。LaravelではまずEloquentを使うのが普通。EloquentからQuery Builderにスムーズに繋がるので実際には両方使う。
+
+現実的にLaravelを使う時はEloquentこそが主役。「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」のレスポンスはDB内のデータから作ることが当然多い。
+
+なのでEloquentモデルを作る時にコントローラー等の他のファイルも同時に作る使い方をすることが多い。`--all`での指定は余計なものが多い。最低でも`-m`でマイグレーションファイルは作る。これで作ればテーブル名を間違えることがない。
+```shell
+php artisan make:model Post --all
+php artisan make:model Post -m
+```
+
+DB周りは情報量が膨大なので

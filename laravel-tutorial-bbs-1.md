@@ -192,4 +192,7 @@ php artisan make:model Post --all
 php artisan make:model Post -m
 ```
 
-DB周りは情報量が膨大なので
+DB周りは情報量が膨大なのでここで書いても仕方がない。
+
+「Eloquentを使う」と「リレーションを覚える」が最低でも必要なこと。
+

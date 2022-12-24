@@ -148,6 +148,19 @@ breezeで増えたファイルを見ればコントローラーの使い方は�
 
 ここで覚えるべきは「**LaravelのコントローラーはContorollerという名前が付いてるだけのただのclass**」「**routes/web.phpに全部書くと長いのでclassに分けてるだけって認識**」
 
+クロージャからコントローラーclassへの変更はPHPの`callable`が分かっていれば`callable`同士の変更だと理解しやすい。どの書き方でも第二引数は全部`callable`。
+```php
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/', fn () => view('welcome'));
+
+Route::get('/', TestController::class);
+
+Route::get('/', [TestController::class, 'index']);
+```
+
 コントローラーの作成は基本的にはシングルアクションコントローラーかリソースコントローラーの2択。初心者がこれ以外のコントローラーの使い方すると一つのコントローラーにいくつもメソッドを増やしてあっという間にファットコントローラーの出来上がり。
 
 ```shell
@@ -176,6 +189,9 @@ Route:resource('post', PostController::class);
 
 ### ヒント3
 旧バージョンのLaravelではまず`php artisan make:auth`でユーザー登録機能を作成していた。その後`make:auth`が`laravel/ui`に分離された。さらにその後JetstreamとBreezeがスターターキットとして用意されたので`laravel/ui`を使うことはもうない。ころころ変わった経緯があるので古い情報に騙されないように。
+
+### ヒント4
+Laravelでは至る所で`callable`を使うので`callable`の理解は必須。
 
 ## データベースとEloquent
 Perl掲示板でDB使うことはなかった。DB使うようになったのはPHP以降。

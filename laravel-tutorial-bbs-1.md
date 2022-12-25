@@ -742,9 +742,7 @@ htmlは許可しないけど改行だけは反映させるために`{!! nl2br(e(
                 投稿はまだありません。
             @endforelse
 
-            @if($posts && $posts->count() > 0)
-                {{ $posts->links() }}
-            @endif
+            {{ $posts->links() }}
         </div>
     </div>
 ```

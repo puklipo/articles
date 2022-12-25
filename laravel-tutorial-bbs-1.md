@@ -270,3 +270,316 @@ npm run dev
 ### ヒント1
 ビルドしたjs/cssファイルは`/public/build/`内に作られる。変更するのはresources内のファイル、`/public/build/`内は絶対に直接変更しない。buildコマンドの実行で全部上書きされるので変更してもすべて消える。
 
+## 掲示板を作り始める
+最低限説明することだけでも多い。
+
+ここまででルーティング＆コントローラー→Eloquentモデルで必要なデータを取得→レスポンスを返す基本的な処理の流れは説明できたのでそろそろ掲示板作りへ。
+
+コメントではない親の投稿から。
+
+最初に決めるのはルーティング。この段階で頭の中では大まかな設計ができている。
+- ルーティングは`/post`からPostController
+- モデルはPost。id,title,content,name,email,icon,password
+- `/`はHomeController。post.indexは使わずhomeを使う。
+
+最初に作るのはモデル。今回は削除・編集もできるのでallで全部指定。
+
+```shell
+php artisan make:model Post --all
+
+   INFO  Model [app/Models/Post.php] created successfully.
+
+   INFO  Factory [database/factories/PostFactory.php] created successfully.
+
+   INFO  Migration [database/migrations/2022_12_25_122411_create_posts_table.php] created successfully.
+
+   INFO  Seeder [database/seeders/PostSeeder.php] created successfully.  
+
+   INFO  Request [app/Http/Requests/StorePostRequest.php] created successfully.
+
+   INFO  Request [app/Http/Requests/UpdatePostRequest.php] created successfully.
+
+   INFO  Controller [app/Http/Controllers/PostController.php] created successfully.
+
+   INFO  Policy [app/Policies/PostPolicy.php] created successfully.
+
+```
+
+色々生成されるけどまず見るのはmigrationsとModelsとControllers。
+
+## postsテーブルのマイグレーション
+DBの定義を決める。
+
+Postモデルに対応するpostsテーブル用のマイグレーションが作られているので項目を追加していく。
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('posts');
+    }
+};
+```
+
+開発初期段階なら別に「後から変えればいい」。
+```php
+    public function up()
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('title')->nullable();
+            $table->text('content');
+            $table->string('name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('icon')->nullable();
+            $table->string('password')->nullable();
+
+            $table->timestamps();
+        });
+    }
+```
+
+マイグレーションを実行してDBに反映。DBに接続することは必ずsailで実行する。
+```shell
+sail art migrate
+```
+
+PhpStormかSequel AceでDBを見て変更されてることを確認。
+
+### ヒント1
+Laravelを使う前にDBとSQLの知識も当然のように必須。
+
+### ヒント2
+開発中に最初のマイグレーションファイルを変更したくなることは多い。DBを全部消してもいい初期段階なら新しいマイグレーションを追加ではなく元のマイグレーションを変更して`migrate:refresh`コマンドで作り直してもいい。
+
+```shell
+sail art migrate:refresh
+```
+
+## Postモデル
+`/app/Models/Post.php`でこの段階で必要な変更は$fillableだけ。
+
+```php
+class Post extends Model
+{
+    use HasFactory;
+
+    /**
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'content',
+        'name',
+        'email',
+        'icon',
+        'password'
+    ];
+}
+```
+
+## ルーティング
+`/routes/web.php`
+```php
+use App\Http\Controllers\PostController;
+
+Route::resource('post', PostController::class);
+```
+
+postに関するルートが追加される。
+
+```shell
+php artisan route:list --path=post
+
+  GET|HEAD        post ..................... post.index › PostController@index
+  POST            post ..................... post.store › PostController@store
+  GET|HEAD        post/create ............ post.create › PostController@create
+  GET|HEAD        post/{post} ................ post.show › PostController@show
+  PUT|PATCH       post/{post} ............ post.update › PostController@update
+  DELETE          post/{post} .......... post.destroy › PostController@destroy
+  GET|HEAD        post/{post}/edit ........... post.edit › PostController@edit
+```
+
+http://localhost/post を表示はできるけどContorollerから何もレスポンスを返してないのでまだ何もない。
+
+## ホームも作る
+```shell
+php artisan make:controller HomeController -i
+
+   INFO  Controller [app/Http/Controllers/HomeController.php] created successfully.  
+```
+ルーティングは最初の`/`をHomeControllerに変更。
+```php
+use App\Http\Controllers\HomeController;
+
+Route::get('/', HomeController::class)->name('home');
+```
+
+HomeControllerから`view('welcome')`を返せばとりあえず今の段階では元と同じ。後でまた変更。
+
+```php
+class HomeController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __invoke(Request $request)
+    {
+        return view('welcome');
+    }
+}
+```
+
+## ホームに投稿フォームを作る
+ここまでブラウザでの画面の変化がないのでそろそろ目に見える投稿フォームを作る。
+
+その前にbreezeのレイアウトファイルを修正。breezeはログインして使う前提なので今回のようにログイン不要で使う場合は少し困る。ログインしてなくても使えるようにapp.blade.phpを修正。
+
+- navigationはログイン中のみ表示。
+- header部分はアプリ名を表示。ここはなんでもいいので自由に変更すればいい。
+
+`/resouces/views/layouts/app.blade.php`
+```html
+        <div class="min-h-screen bg-gray-100">
+            @auth
+                @include('layouts.navigation')
+            @endauth
+
+            <!-- Page Heading -->
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                            {{ config('app.name') }}
+                        </h2>
+                    </div>
+                </header>
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
+        </div>
+```
+
+ホーム用のviewはdashboard.blade.phpをコピーしてhome.blade.phpを作る。
+```html
+<x-app-layout>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    {{ __("Home!") }}
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+```
+
+HomeControllerでhome.blade.phpを返す。
+```php
+class HomeController extends Controller
+{
+    public function __invoke(Request $request)
+    {
+        return view('home');
+    }
+}
+```
+
+ログインしてなくても http://localhost/ が表示できてやっとhome.blade.phpに投稿フォームを書く準備ができた。
+
+フォームはregister.blade.phpなどを参考に。細かい見た目は後からいくらでも変更できるので優先度は低い。
+```html
+<x-app-layout>
+    <div class="py-12">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <form method="POST" action="{{ route('post.store') }}">
+                        @csrf
+
+                        <!-- Title -->
+                        <div class="mt-4">
+                            <x-input-label for="title" :value="__('タイトル')" />
+                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title')" autofocus />
+                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mt-4">
+                            <x-input-label for="content" :value="__('メッセージ')" />
+                            <textarea id="content" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" type="text" name="content" required>{{ old('content') }}</textarea>
+                            <x-input-error :messages="$errors->get('content')" class="mt-2" />
+                        </div>
+
+                        <!-- Name -->
+                        <div class="mt-4">
+                            <x-input-label for="name" :value="__('名前')" />
+                            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name', request()->cookie('name'))" />
+                            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                        </div>
+
+                        <!-- Email Address -->
+                        <div class="mt-4">
+                            <x-input-label for="email" :value="__('メール（公開されません）')" />
+                            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', request()->cookie('email'))" />
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mt-4">
+                            <x-input-label for="password" :value="__('削除用パスワード')" />
+
+                            <x-text-input id="password" class="block mt-1 w-full"
+                                          type="password"
+                                          name="password"
+                                          autocomplete="password" />
+
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        </div>
+
+                        <div class="flex items-center justify-end mt-4">
+                            <x-primary-button class="ml-4">
+                                {{ __('送信') }}
+                            </x-primary-button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
+```
+
+アイコン選択はまだないけど投稿フォームはできた。次は送信後の保存。
+
+## PostController

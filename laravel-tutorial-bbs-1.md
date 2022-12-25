@@ -91,7 +91,7 @@ https://github.com/laravel/sail-server/blob/master/resources/scripts/php.sh
 
 Laravelへの入門はまずこの段階のプロジェクトを隅々まで観察する。「Laravelはこう使うもの」という方向性を示している。
 
-見るところ
+最初に見るところ
 
 - composer.json : `"laravel/framework": "^9.19",` Laravelのメジャーバージョンを確認。新規なら最新バージョンなので関係ないけど既存のプロジェクトを見る時はどのバージョンなのかが重要。
 - routes/web.php : ルーティングを見ればプロジェクトのことは大体分かる。
@@ -117,7 +117,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 ```
-`/`は http://localhost/ の最後の`/`のこと。このルーティングは「http://localhost/ がリクエストされたら`/resouces/views/welcome.blade.php`を表示する」って意味。  
+`/`は http://localhost/ の最後の`/`のこと。このルーティングは「http://localhost/ がリクエストされたら`/resouces/views/welcome.blade.php`からhtmlを作って表示する」って意味。  
 ルーティングの書き方・読み方は覚えるだけなので重要ではない。
 
 この段階で覚えるべきは「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」ってこと。これが頭にないと全体の処理の流れを把握できず何をやっているか分からなくなる。
@@ -129,7 +129,7 @@ https://laravel.com/docs/9.x/routing
 
 重要なルーティングだけどあまりにも基本すぎて理解せずに使ってる人は多い。書き方・読み方は簡単なので使えるけど「**Laravelの仕事はHTTPリクエストを受け取ってレスポンスを返す**」を理解してないと結局は何のためにルーティングを書いてるのか分からなくなる。
 
-新規のroutes/web.phpで「リクエストを受け取ってレスポンスを返す」は完結している。別に全部web.phpに書いてもLaravelは使えるって認識は持っておく。でも全部web.phpに書くと不便なので別のclassに分けたいって要望から出てくるのが次のコントローラー。
+routes/web.phpで「リクエストを受け取ってレスポンスを返す」は完結している。別に全部web.phpに書いてもLaravelは使えるって認識は持っておく。でも全部web.phpに書くと不便なので別のclassに分けたいって要望から出てくるのが次のコントローラー。
 
 ### ヒント1
 本当の入り口は`/public/index.php`だけど入門段階でもその後でもほとんど気にすることはないのでルーティングが入り口と思っていていい。
@@ -269,3 +269,4 @@ npm run dev
 
 ### ヒント1
 ビルドしたjs/cssファイルは`/public/build/`内に作られる。変更するのはresources内のファイル、`/public/build/`内は絶対に直接変更しない。buildコマンドの実行で全部上書きされるので変更してもすべて消える。
+

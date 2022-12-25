@@ -476,7 +476,9 @@ class HomeController extends Controller
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                            {{ config('app.name') }}
+                            <a href="{{ route('home') }}">
+                                {{ config('app.name') }}
+                            </a>
                         </h2>
                     </div>
                 </header>

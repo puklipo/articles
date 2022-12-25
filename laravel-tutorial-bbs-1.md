@@ -31,7 +31,7 @@ Laravel入門 いにしえの掲示板を作る パート1
 - [Laravel 開発環境構築 Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)
 - [Laravel 開発環境構築 Mac版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-mac.md)
 
-Laravelの標準的な使い方を知りたい人。
+Laravelの標準的な使い方を知りたい人。ドキュメントを読めば分かることは詳しく説明しない。
 
 「Laravel入門」であって「プログラミング入門」ではないのでプログラミング初心者は完全に対象外。Laravelの前にPHPや他の言語で基礎を覚えるのが先に必須。
 
@@ -582,4 +582,190 @@ class HomeController extends Controller
 
 アイコン選択はまだないけど投稿フォームはできた。次は送信後の保存。
 
-## PostController
+### ヒント1
+LaravelでのURLは`action="{{ route('post.store') }}"`のように`route()`を使うことがほとんど。
+
+たまに`{{ action([PostController::class, 'store']) }}`みたいなaction()を使ってる初心者を見るけどどこでこんな変な使い方を覚えるのか分からない。action()なんて今まで一度も使ったことないくらい全く使わない。
+
+## PostControllerのstore()
+新規投稿の場合、フォームから送信されたデータはstore()でDBに保存。
+
+書き方はいろいろあるけどcreate()を使うのが一番いい。ここではpasswordを暗号化するため先にmergeでpasswordを変更してから保存している。
+```php
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StorePostRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorePostRequest $request)
+    {
+        $request->merge([
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        Post::create($request->only([
+            'title',
+            'content',
+            'name',
+            'email',
+            'icon',
+            'password',
+        ]));
+
+        cookie()->queue('name', $request->input('name'));
+        cookie()->queue('email', $request->input('email'));
+
+        return back();
+    }
+```
+
+Postモデル作成時にallを指定したのでStorePostRequestも自動で作られている。バリデーションはStorePostRequestで行うのでこっちも変更が必要。
+
+今回はログインしてなくても投稿できるのでauthorize()をtrueに。今回に限らずここのauthorize()で判定することは少ない。ログインしてるかどうかはもっと前の段階で判定。
+```php
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
+
+class StorePostRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, mixed>
+     */
+    public function rules()
+    {
+        return [
+            'title' => ['nullable', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:4000'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:255'],
+            'password' => ['nullable', Password::defaults()],
+        ];
+    }
+}
+```
+
+これでブラウザから投稿してDBに保存まではできた。まだ表示はないのでDB内を直接見れば投稿できてるか確認できる。
+
+### ヒント1
+create()で作成するためにはPostモデルの$fillableでの許可が必要。許可したカラムだけ入力できる。この辺りQuery BuilderとEloquentの違いを理解してないと予期しない動作になって危険。$fillableはEloquentの機能。
+
+### ヒント2
+初心者にものすごく多い間違い。`$request->all()`は厳禁。$fillableがあるとはいえall()を使ってるような初心者では必ず危険な状態になる。
+```php
+        Post::create($request->all());
+```
+
+`$request->only()`を使うか一つずつ指定。
+
+```php
+       Post::create([
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'icon' => $request->input('icon'),
+            'password' => bcrypt($request->input('password')),
+       ]);
+```
+
+## 投稿の表示
+パート1の最後に表示までは完成させる。
+
+HomeController。updated_at順でページネーション用に取得するごく普通のコード。
+```php
+namespace App\Http\Controllers;
+
+use App\Models\Post;
+use Illuminate\Http\Request;
+
+class HomeController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __invoke(Request $request)
+    {
+        $posts = Post::latest('updated_at')->paginate();
+
+        return view('home')->with(compact('posts'));
+    }
+}
+```
+
+home.blade.phpの後半に投稿の表示部分を追加。ここも見た目はどうでもいい。好きな見た目にすればいい。  
+htmlは許可しないけど改行だけは反映させるために`{!! nl2br(e($post->content)) !!}`ではe()でエスケープ→nl2br()で改行をbrタグに→{!! !!}でスケープしない表示。
+```php
+    <div class="py-12">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            @forelse($posts as $post)
+                <div class="flex flex-row">
+                    <div class="p-6 my-3 w-1/4">
+                        <div class="text-lg font-bold">{{ $post->name ?? 'NO NAME' }}</div>
+
+                        <time class="mt-6" datetime="{{ $post->created_at }}">{{ $post->created_at }}</time>
+                    </div>
+                    <div class="grow my-3 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-lg text-gray-900">
+                            <h2 class="font-bold inline">{{ $post->title ?? 'NO TITLE' }}</h2><span
+                                class="text-gray-300 font-medium ml-3">#{{ $post->id }}</span>
+                            <p class="py-2">
+                                {!! nl2br(e($post->content)) !!}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                投稿はまだありません。
+            @endforelse
+
+            @if($posts && $posts->count() > 0)
+                {{ $posts->links() }}
+            @endif
+        </div>
+    </div>
+```
+
+### ヒント1
+`compact()`はPHPの標準関数。`['posts' => $posts]`と同じ意味。Laravelでコントローラーからviewに変数を渡す時などにcompact()はよく使う。別に使わなくてもいい。
+
+これでも同じ。
+```php
+return view('home')->with(['posts' => $posts]);
+```
+
+## 処理の流れを振り返る
+http://localhost/ へのGETリクエスト  
+→ルーティングのRoute::get('/')  
+→HomeControllerにてPostのデータをhome.blade.phpに渡して作ったhtmlをレスポンスとして返す。
+
+レスポンスを返したら処理の流れは一度終了。ここから次の流れにも続いてると考えると認識を間違える。
+
+homeの投稿フォームからroute('post.store')にPOSTリクエストを送信  
+→ルーティングのRoute::resource('post')の内のpost.store  
+→PostControllerのstore()でPostモデルに保存。　　
+→back()で前のページに戻る。
+
+「前のページに戻る」がここでのレスポンス。レスポンスを返したのでここは終了。  
+
+前のページは http://localhost/ なので次の処理は「http://localhost/ へのGETリクエスト」で最初に戻る。
+
+どこからどこまでが一連の処理の流れかを意識すれば「リクエストを受け取ってレスポンスを返すまで」の基本中の基本を間違えない。

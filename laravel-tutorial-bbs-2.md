@@ -297,6 +297,7 @@ Laravelの開発作業はコードを書く→テストで緑にするの繰り�
 - 表示はhomeで投稿ごとに全コメントを表示。個別のコメント表示はしない。
 - モデルはComment
 - テーブルはcomments。post_id,content,name,email,icon,password
+- 今回は簡単にするため1行コメントにする。
 - passwordは必須にする。投稿のpasswordも後で必須に変更。でも今回は編集・削除機能までは作らない。
 - PostとCommentは一対多
 
@@ -317,7 +318,7 @@ commentsのマイグレーション。postsとほぼ同じなのでコピペし�
                   ->cascadeOnUpdate()
                   ->cascadeOnDelete();
 
-            $table->text('content');
+            $table->string('content');
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('icon')->nullable();
@@ -467,3 +468,205 @@ public function store($id)
     $post = Post::find($id);
 }
 ```
+
+## Commentの投稿
+ここはPostと同じなのでざっと。
+
+- home.posts の各投稿にコメントのフォームを作る。
+- CommentControllerのstore()でコメントの保存。
+- home.posts でコメントの表示。
+
+最初から別ファイルに分割。  
+`route('post.comment.store', $post)`は普通に書いてるけど間違った使い方しやすい箇所。`route('post.comment.store', ['post' => $post->id])`みたいな使い方してる例が多いけどもっと簡単に`$post`を渡せばいい。
+`resources/views/home/comment.blade.php`
+```php
+<h3 class="text-lg font-bold">コメント</h3>
+
+<ul class="ml-3 space-y-1">
+    @forelse($post->comments as $comment)
+        <li>
+            <span class="font-bold">{{ $comment->name ?? 'NO NAME' }}</span>
+            <span class="mx-1">『{{ $comment->content }}』</span>
+            <time class="text-gray-200" datetime="{{ $comment->created_at }}">{{ $comment->created_at }}</time>
+        </li>
+    @empty
+        <span class="text-gray-300">コメントはありません。</span>
+    @endforelse
+</ul>
+
+<details class="mt-3">
+    <summary>コメントを書く</summary>
+    <div class="p-6 bg-gray-100">
+        <form method="POST" action="{{ route('post.comment.store', $post) }}">
+            @csrf
+
+            <!-- Content -->
+            <div class="mt-4">
+                <x-input-label for="content" :value="__('コメント')"/>
+                <x-text-input id="content"
+                              class="block mt-1 w-full"
+                              type="text" name="content" :value="old('content')" required/>
+                <x-input-error :messages="$errors->get('content')" class="mt-2"/>
+            </div>
+
+            <!-- Name -->
+            <div class="mt-4">
+                <x-input-label for="name" :value="__('名前')"/>
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
+                              :value="old('name', request()->cookie('name'))"/>
+                <x-input-error :messages="$errors->get('name')" class="mt-2"/>
+            </div>
+
+            <!-- Email Address -->
+            <div class="mt-4">
+                <x-input-label for="email" :value="__('メール（公開されません）')"/>
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
+                              :value="old('email', request()->cookie('email'))"/>
+                <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+            </div>
+
+            <!-- Password -->
+            <div class="mt-4">
+                <x-input-label for="password" :value="__('削除用パスワード')"/>
+
+                <x-text-input id="password" class="block mt-1 w-full"
+                              type="password"
+                              name="password"
+                              required
+                              autocomplete="password"/>
+
+                <x-input-error :messages="$errors->get('password')" class="mt-2"/>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <x-primary-button class="ml-4">
+                    {{ __('送信') }}
+                </x-primary-button>
+            </div>
+
+        </form>
+    </div>
+</details>
+```
+
+`resources/views/home/posts.blade.php`
+```php
+@forelse($posts as $post)
+    <div class="flex flex-row">
+        <div class="p-6 my-3 w-1/4">
+            <div class="text-lg font-bold">{{ $post->name ?? 'NO NAME' }}</div>
+
+            <time class="mt-6" datetime="{{ $post->created_at }}">{{ $post->created_at }}</time>
+        </div>
+        <div class="grow my-3 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 text-lg text-gray-900">
+                <h2 class="font-bold inline">{{ $post->title ?? 'NO TITLE' }}</h2><span
+                    class="text-gray-300 font-medium ml-3">#{{ $post->id }}</span>
+                <p class="py-2">
+                    {!! nl2br(e($post->content)) !!}
+                </p>
+            </div>
+
+            <div class="p-6 border-t">
+                @include('home.comment')
+            </div>
+        </div>
+    </div>
+@empty
+    投稿はまだありません。
+@endforelse
+
+{{ $posts->links() }}
+```
+
+`app/Http/Requests/StoreCommentRequest.php`
+```php
+    public function rules()
+    {
+        return [
+            'content' => ['required', 'string', 'max:255'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:255'],
+            'password' => ['required', Password::defaults()],
+        ];
+    }
+```
+
+CommentControllerのstore()。Postとほぼ同じ。リレーションを使っているので`$post->comments()->create()`だけでpost_idが自動的にセットされた新しいCommentが保存される。
+```php
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  StoreCommentRequest  $request
+     * @param  Post  $post
+     * @return Response
+     */
+    public function store(StoreCommentRequest $request, Post $post)
+    {
+        $request->merge([
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        $post->comments()->create($request->only([
+            'content',
+            'name',
+            'email',
+            'icon',
+            'password',
+        ]));
+
+        cookie()->queue('name', $request->input('name'), 60*24*30);
+        cookie()->queue('email', $request->input('email'), 60*24*30);
+
+        return back();
+    }
+```
+
+Laravelではこういう使い方をして欲しいけどLaravelが勝手に色々やってくれて実現してる機能なので内部で何が起きてるのか理解してないと中々使えない。
+
+HomeControllerでPost取得時にコメントも新しい順に取得。ここもリレーションの機能。Query Builderで考えるとjoinとか使いそうになるけどEloquentのリレーションでの使い方はこうなる。
+```php
+class HomeController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __invoke(Request $request)
+    {
+        $posts = Post::with([
+            'comments' => fn ($comment) => $comment->latest(),
+        ])->latest('updated_at')
+          ->paginate();
+
+        return view('home')->with(compact('posts'));
+    }
+}
+```
+
+各投稿ごとにcommentsを持った結果を得られる。コードで書いたほうが分かりやすい。
+```php
+foreach($posts as $post) {
+    foreach($post->comments as $comment) {
+        $comment->name;
+    }
+}
+```
+
+### ヒント1
+厳密にはwith()なしでもpost->commentsは使えるけどN+1問題が発生するのでwithなどでEagerロードするのが基本。
+
+## Commentが送信されたら親の投稿の更新時間も変更
+Commentモデル。リレーションのpostの更新時間も更新する定義。
+```php
+    /**
+     * @var array
+     */
+    protected $touches = ['post'];
+```
+
+これで親の投稿時間順もしくはコメントが付いた順での表示。
+

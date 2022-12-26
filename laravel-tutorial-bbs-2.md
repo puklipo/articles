@@ -670,3 +670,81 @@ Commentモデル。リレーションのpostの更新時間も更新する定義
 
 これで親の投稿時間順もしくはコメントが付いた順での表示。
 
+## コメントのテスト
+この時点で元のテストが失敗しないことを確認してからコメントのテストを書く。
+
+`database/factories/CommentFactory.php`
+```php
+    public function definition()
+    {
+        return [
+            'content' => fake()->text(),
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+        ];
+    }
+```
+
+`tests/Feature/CommentTest.php`はPostTestをコピーでもいい。
+```php
+class CommentTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_posts_with_comments()
+    {
+        Post::factory()->count(20)->hasComments(5)->create();
+
+        $response = $this->get('/');
+
+        $response->assertSuccessful()
+                 ->assertDontSeeText('コメントはありません')
+                 ->assertViewHas('posts', fn ($posts) => $posts->first()->comments()->count() === 5);
+
+        $this->assertDatabaseCount('comments', 100);
+    }
+
+    public function test_store_successful()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->post(route('post.comment.store', $post), [
+            'content' => 'test content',
+            'name' => 'test name',
+            'email' => 'test@localhost',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseCount('comments', 1)
+             ->assertDatabaseHas('comments', [
+                 'post_id' => $post->id,
+                 'content' => 'test content',
+                 'name' => 'test name',
+                 'email' => 'test@localhost',
+             ]);
+    }
+
+    public function test_store_invalid()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->post(route('post.comment.store', $post), [
+            'content' => '',
+            'password' => '',
+        ]);
+
+        $response->assertRedirect()
+                 ->assertInvalid(['content', 'password']);
+
+        $this->assertDatabaseCount('comments', 0)
+             ->assertDatabaseMissing('comments', [
+                 'content' => '',
+             ]);
+    }
+}
+```
+
+CommentControllerのstore()が緑なら十分。

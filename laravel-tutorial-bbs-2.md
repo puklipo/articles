@@ -437,3 +437,33 @@ php artisan route:list --path=post/{post}/comment
 
   POST       post/{post}/comment post.comment.store › CommentController@store
 ```
+
+CommentControllerの修正。post部分を追加。store()以外も修正が必要だけど今回は使わないのでそのまま、もしくはもう削除してもいい。
+```php
+use App\Models\Post;
+
+//
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  StoreCommentRequest  $request
+     * @param  Post  $post
+     * @return Response
+     */
+    public function store(StoreCommentRequest $request, Post $post)
+    {
+        //
+    }
+```
+
+### ヒント1
+`/post/1/comment`へのリクエストでは`public function store(Post $post)`に来た時点で自動的に「id=1の$post」が入ってくる。これもLaravelでは当然のように使う機能。
+
+こんな使い方はしない。
+```php
+public function store($id)
+{
+    $post = Post::find($id);
+}
+```

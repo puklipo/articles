@@ -205,6 +205,31 @@ Route:resource('post', PostController::class);
 ### ヒント4
 Laravelでは至る所で`callable`を使うので`callable`の理解は必須。
 
+## 初期設定
+laravel.buildでプロジェクトを作った場合、設定することはほとんどないけど`config/app.php`のtimezoneだけは変更したほうがいいかもしれない。
+```php
+    'timezone' => 'Asia/Tokyo',
+```
+
+他は`.env`のAPP_NAMEくらい。
+```
+APP_NAME=Laravel
+```
+好みに応じてログの保存方法をdailyにしてもいい。
+```
+LOG_CHANNEL=daily
+```
+
+Sailを使うならこれ以外の設定は不要なので余計な変更は何もしなくていい。余計な変更をして動かなくなってる人が多い。
+
+## エラーログ
+Laravelから何かエラーが出た時は`storage/logs/laravel.log`もしくは`storage/logs/`内にログが残っているのでここを見る。
+
+PHPコード内で`info()`などを使った時もここのログに残る。上手く動かなくて変数の中身を確認したいような時はこれでいい。
+```php
+info('test');
+```
+
 ## データベースとEloquent
 Perl掲示板でDB使うことはなかった。DB使うようになったのはPHP以降。
 

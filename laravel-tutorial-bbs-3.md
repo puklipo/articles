@@ -6,7 +6,7 @@ Laravel入門 いにしえの掲示板を作る パート3
 ここからは管理者を作って管理機能を作る。
 
 ## ユーザー登録
-http://localhost/register で新規ユーザーを作る。
+http://localhost/register で新規ユーザーを作る。Laravelのスターターキットを使えば登録機能は最初から揃ってるのでもはや説明する必要もない。
 
 Breeze(Blade)では登録処理は `app/Http/Controllers/Auth/RegisteredUserController.php` なので必要なら確認。
 

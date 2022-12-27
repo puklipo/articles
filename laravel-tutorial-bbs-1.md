@@ -799,4 +799,4 @@ homeの投稿フォームからroute('post.store')にPOSTリクエストを送�
 どこからどこまでが一連の処理の流れかを意識すれば「リクエストを受け取ってレスポンスを返すまで」の基本中の基本を間違えない。
 
 ## パート2へ
-パート2ではテストと投稿へのコメントを作っていく。
+[パート2](https://github.com/pop-culture-studio/articles/blob/main/laravel-tutorial-bbs-2.md)ではテストと投稿へのコメントを作っていく。

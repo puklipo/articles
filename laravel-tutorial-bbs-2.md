@@ -670,6 +670,8 @@ Commentモデル。リレーションのpostの更新時間も更新する定義
 
 これで親の投稿時間順もしくはコメントが付いた順での表示。
 
+ブラウザで親の投稿を書いたりコメントを書いたりして動作確認する。自動テストは書くけど手動での動作確認もする。テストで作ったデータはすぐ消えるのである程度データがある状態を残すには手動で操作も必要。
+
 ## コメントのテスト
 この時点で元のテストが失敗しないことを確認してからコメントのテストを書く。
 
@@ -748,3 +750,89 @@ class CommentTest extends TestCase
 ```
 
 CommentControllerのstore()が緑なら十分。
+
+## 投稿のpasswordも必須に変更
+ここまで来るとDBにデータが増えていて全部消してやり直しはしたくない。以降は新しいマイグレーションを作ってDBを変更する。本番環境では当然消せないので常に新しいマイグレーションを作るのが本来の使い方。元のマイグレーションを編集して全部やり直しが可能なのは開発初期段階だけ。
+
+DBのカラムを変更するには先にcomposerで`doctrine/dbal`のインストールが必要。
+```shell
+composer require doctrine/dbal
+```
+
+マイグレーションを作って
+```shell
+php artisan make:migration change_password_posts_table
+```
+
+nullableでないように変更。up()で変更と、down()で「変更を元に戻す時の定義」も必要。
+```php
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->string('password')->nullable(false)->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->string('password')->nullable()->change();
+        });
+    }
+};
+```
+
+sailで実行。
+```shell
+sail art migrate
+```
+
+StorePostRequestのバリデーションでpassword必須にする。
+```php
+    public function rules()
+    {
+        return [
+            'title' => ['nullable', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:4000'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255'],
+            'icon' => ['nullable', 'string', 'max:255'],
+            'password' => ['required', Password::defaults()],
+        ];
+    }
+```
+
+テストはこれまでもpasswordを指定していたので失敗はしない。
+
+一応PostTestにpasswordがない場合のテストを追加。
+```php
+    public function test_store_invalid_missing_password()
+    {
+        $response = $this->post(route('post.store'), [
+            'content' => 'test',
+            'password' => null,
+        ]);
+
+        $response->assertRedirect()
+                 ->assertInvalid(['password']);
+
+        $this->assertDatabaseCount('posts', 0)
+             ->assertDatabaseMissing('posts', [
+                 'content' => 'test',
+             ]);
+    }
+```
+
+DBへの追加や変更は必ず発生するのでマイグレーションで変更もLaravelでの開発の日常作業。

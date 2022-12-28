@@ -369,3 +369,101 @@ DestroyPostRequestで確認してるのでPostControllerのdestroy()はそのま
 編集やコメントの削除・編集機能は同じ説明になるのでもう省略。
 
 リソースコントローラーでの基本的なCRUDは毎回同じ作業で退屈。Laravelでも便利にする機能はない。
+
+## アイコン選択機能
+退屈な作業の後は見た目が変わるアイコンを表示しよう。
+
+- 事前に用意したいくつかのアイコンから選択可能。ユーザー登録する前提なら自由にアイコン画像をアップロード可能にもできるけど昔の掲示板ではそんな仕様は少なかった。
+
+画像ファイルは`/public/icon/`に保存。直接表示して使う画像はpublicに置く。直接表示させたくないファイルは`/storage/`内に置く。
+
+画像は未来図倉庫から動物の写真を正方形にリサイズして使用。icon1.jpgみたいなファイル名にした。  
+https://ggijp-pcs.com/
+
+アイコンの設定用に`/config/icon.php`を作る。
+```php
+<?php
+
+return [
+    'icon1' => [
+        'name' => 'アイコン 1',
+        'file' => 'icon1.jpg',
+    ],
+    'icon2' => [
+        'name' => 'アイコン 2',
+        'file' => 'icon2.jpg',
+    ],
+    'icon3' => [
+        'name' => 'アイコン 3',
+        'file' => 'icon3.jpg',
+    ],
+    'icon4' => [
+        'name' => 'アイコン 4',
+        'file' => 'icon4.jpg',
+    ],
+    'icon5' => [
+        'name' => 'アイコン 5',
+        'file' => 'icon5.jpg',
+    ],
+];
+
+```
+
+Laravelのconfigはほぼ定数としての使い方もある。「DBに保存するほどではないけどどこかで定義しておきたい値」の設定場所にconfigがちょうどいい。
+
+configで設定しておけばどこからでも使える。
+```php
+@foreach(config('icon') as $key => $icon)
+    {{ $icon['name'] }} {{ asset('/icon/'.$icon['file']) }}
+@endforeach
+```
+
+DBに保存するのはkey部分のみ。後からファイル名を変えたり、アイコンを削除しても存在しないファイルを表示しようとしないようにしておく。
+
+これを使って投稿フォームにアイコン選択を追加。  
+`resources/views/home/form.blade.php`
+```php
+    <!-- Icon -->
+    <div class="mt-4">
+        <x-input-label for="icon" :value="__('アイコン')"/>
+        <select id="icon"
+                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                name="icon">
+            <option value="" @selected(blank(request()->cookie('icon')))>なし</option>
+            @foreach(config('icon') as $key => $icon)
+                <option value="{{ $key }}" @selected(request()->cookie('icon') === $key)>{{ $icon['name'] }}</option>
+            @endforeach
+        </select>
+
+        <div class="my-3 flex flex-row space-x-5">
+            @foreach(config('icon') as $key => $icon)
+                <span><img src="{{ asset('/icon/'.$icon['file']) }}" class="w-8 rounded-full inline" alt="{{ $icon['name'] }}" title="{{ $icon['name'] }}">
+                    <span class="font-bold">{{ $icon['name'] }}</span>
+                </span>
+            @endforeach
+        </div>
+
+        <x-input-error :messages="$errors->get('icon')" class="mt-2"/>
+    </div>
+```
+
+投稿時にアイコンを選択していれば表示。
+`resources/views/home/posts.blade.php`
+```php
+            @if(filled($post->icon) && file_exists(public_path('/icon/'.config('icon.'.$post->icon.'.file'))))
+                <img src="{{ asset('/icon/'.config('icon.'.$post->icon.'.file')) }}"
+                     class="w-48 rounded-full"
+                     alt="{{ config('icon.'.$post->icon.'.name') }}"
+                     title="{{ config('icon.'.$post->icon.'.name') }}"
+                >
+            @endif
+```
+
+PostController::store()は最初からiconも保存しているのでクッキーへの追加のみ。
+```php
+        $cookie_days = 60 * 24 * 30;
+
+        cookie()->queue('name', $request->input('name'), $cookie_days);
+        cookie()->queue('email', $request->input('email'), $cookie_days);
+        cookie()->queue('icon', $request->input('icon'), $cookie_days);
+```

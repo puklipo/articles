@@ -467,3 +467,64 @@ PostController::store()は最初からiconも保存しているのでクッキ�
         cookie()->queue('email', $request->input('email'), $cookie_days);
         cookie()->queue('icon', $request->input('icon'), $cookie_days);
 ```
+
+アイコンを表示すると見た目が変わるのでコメントにも付けよう。
+
+投稿とほとんど同じ。  
+`resources/views/home/comment.blade.php`
+```php
+            <span class="font-bold">
+                @if(filled($comment->icon) && file_exists(public_path('/icon/'.config('icon.'.$comment->icon.'.file'))))
+                    <img src="{{ asset('/icon/'.config('icon.'.$comment->icon.'.file')) }}"
+                         class="w-8 rounded-full inline"
+                         alt="{{ config('icon.'.$comment->icon.'.name') }}"
+                         title="{{ config('icon.'.$comment->icon.'.name') }}"
+                    >
+                @endif
+                {{ $comment->name ?? 'NO NAME' }}</span>
+```
+
+```php
+            <!-- Icon -->
+            <div class="mt-4">
+                <x-input-label for="icon" :value="__('アイコン')"/>
+                <select id="icon"
+                        class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        name="icon">
+                    <option value="" @selected(blank(request()->cookie('icon')))>なし</option>
+                    @foreach(config('icon') as $key => $icon)
+                        <option
+                            value="{{ $key }}" @selected(request()->cookie('icon') === $key)>{{ $icon['name'] }}</option>
+                    @endforeach
+                </select>
+
+                <x-input-error :messages="$errors->get('icon')" class="mt-2"/>
+            </div>
+```
+
+テストへの影響はないけど一応PostTestの既存のテストにiconも追加。
+```php
+    public function test_store_successful()
+    {
+        $response = $this->post(route('post.store'), [
+            'title' => 'test title',
+            'content' => 'test content',
+            'icon' => 'icon1',
+            'name' => 'test name',
+            'email' => 'test@localhost',
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseCount('posts', 1)
+             ->assertDatabaseHas('posts', [
+                 'title' => 'test title',
+                 'content' => 'test content',
+                 'icon' => 'icon1',
+                 'name' => 'test name',
+                 'email' => 'test@localhost',
+             ]);
+    }
+```
+

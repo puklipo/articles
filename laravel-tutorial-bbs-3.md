@@ -545,6 +545,12 @@ php artisan make:middleware Visitors
 Visitors.php
 
 ```php
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
 class Visitors
 {
     /**

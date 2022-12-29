@@ -839,3 +839,5 @@ DBへの追加や変更は必ず発生するのでマイグレーションで変
 
 ## パート3へ
 掲示板としてはある程度の機能ができたので公開するつもりのサイトならこの時点でもう公開する。削除・編集機能なんていざとなればDBを直接触ればいいという割り切り。
+
+https://github.com/pop-culture-studio/articles/blob/main/laravel-tutorial-bbs-3.md

@@ -24,6 +24,7 @@ Laravel入門 いにしえの掲示板を作る パート1
 - CSSはTailwind
 - 表示順はupdated_at順。
 - 認証・認可機能の説明用に管理者だけ登録。
+- 本番環境での公開はしない。開発環境までの記事。
 
 ## 対象読者
 この環境構築ができている人。
@@ -31,7 +32,9 @@ Laravel入門 いにしえの掲示板を作る パート1
 - [Laravel 開発環境構築 Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)
 - [Laravel 開発環境構築 Mac版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-mac.md)
 
-Laravelの標準的な使い方を知りたい人。ドキュメントを読めば分かることは詳しく説明しない。
+Laravelの標準的な使い方を知りたい人。Laravelは同じ機能でも複数の書き方ができて「初心者はこう書くけど慣れた人は別の書き方する機能」が多い。
+
+ドキュメントを読めば分かることは詳しく説明しない。
 
 「Laravel入門」であって「プログラミング入門」ではないのでプログラミング初心者は完全に対象外。Laravelの前にPHPや他の言語で基礎を覚えるのが先に必須。
 
@@ -759,7 +762,7 @@ class HomeController extends Controller
 ```
 
 home.blade.phpの後半に投稿の表示部分を追加。ここも見た目はどうでもいい。好きな見た目にすればいい。  
-htmlは許可しないけど改行だけは反映させるために`{!! nl2br(e($post->content)) !!}`ではe()でエスケープ→nl2br()で改行をbrタグに→{!! !!}でスケープしない表示。
+htmlは許可しないけど改行だけは反映させるために`{!! nl2br(e($post->content)) !!}`ではe()でエスケープ→nl2br()で改行をbrタグに→{!! !!}でエスケープしない表示。
 ```php
     <div class="py-12">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
@@ -796,6 +799,9 @@ htmlは許可しないけど改行だけは反映させるために`{!! nl2br(e(
 ```php
 return view('home')->with(['posts' => $posts]);
 ```
+
+### ヒント2
+「{!! !!}とe()」はLaravelの機能、nl2br()はPHPの機能。普通に混在して使うのでPHPの知識も当然のように必須。
 
 ## 処理の流れを振り返る
 http://localhost/ へのGETリクエスト  

@@ -649,7 +649,54 @@ prependで配列の先頭に追加して、uniqueで重複を除く。これで�
 
 <img src="/image/laravel-bbs/laravel-bbs-1.png">
 
-## 他にも覚えたほうがいいLaravelの機能
+## 付録：PHP8.2での動作確認作業
+これを書いてる時点でのSailはPHP8.1で環境が作られる。
+
+`docker-compose.yml`
+```yml
+# For more information: https://laravel.com/docs/sail
+version: '3'
+services:
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.1
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.1/app
+```
+
+PHP8.2のリリース前もしくは後に8.2で動作確認する時の作業。
+
+1. GitHubでSailがPHP8.2に対応しているか確認。`v1.16.0 - 2022-08-31`で対応済。 https://github.com/laravel/sail
+2. ここは普段からやってることだけど`composer update`で最新バージョンに更新。
+3. `docker-compose.yml`を変更。
+
+```yml
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.2
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.2/app
+```
+
+再度ビルドすればPHP8.2で起動するようになる。
+```shell
+sail build --no-cache
+
+sail up -d
+```
+
+ブラウザで確認したりテストを実行。リリース前の場合、sailの外のPHPは8.1のまま、sail内だけPHP8.2な状態だろうからテストもsailで実行する。
+```shell
+sail test
+```
+
+今後のPHPバージョンアップ時でも同じ作業だけど何年も後ではLaravelもSailも変わってるのでこの情報は役に立たない。
+
+## 付録：他にも覚えたほうがいいLaravelの機能
 
 ### ヘルパーやコレクション
 コードの読みやすさに大きく影響する。

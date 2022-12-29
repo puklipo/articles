@@ -528,3 +528,114 @@ PostController::store()は最初からiconも保存しているのでクッキ�
     }
 ```
 
+## 足跡機能を作る
+最初に考えた仕様は大体作り終わった。残ってる足跡機能を作る。
+
+- ユーザー登録しないので見るのはクッキーの名前しかない。
+- リクエストの度に訪問者の名前の配列を更新。キャッシュに保存。
+
+リクエストやレスポンスのタイミングで実行する処理はLaravelのミドルウェアで作る。
+
+```shell
+php artisan make:middleware Visitors
+
+   INFO  Middleware [app/Http/Middleware/Visitors.php] created successfully.
+```
+
+Visitors.php
+
+```php
+class Visitors
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $visitors = collect(cache('visitors', []))
+            ->when(
+                $request->hasCookie('name'),
+                fn (Collection $collect) => $collect->prepend($request->cookie('name'))
+            )->unique()
+            ->take(5)
+            ->toArray();
+
+        cache()->forever('visitors', $visitors);
+
+        return $next($request);
+    }
+}
+```
+
+ここまで出て来なかったけどLaravelで配列を扱う時はCollectionを使う。Laravelの便利な機能の中でも上位に入る。掲示板みたいなシンプルなものを作ってるうちは分かりにくいけど「PHPでやることなんて配列の加工」と言われるくらいなのですぐに重要になってくる。
+
+prependで配列の先頭に追加して、uniqueで重複を除く。これで新しい訪問者の順に表示できる。
+
+「いつ消えてもいいデータ」はキャッシュに保存。今回の場合はリクエストの度に更新されるのでforeverで永遠に保存。一定時間キャッシュするけどキャッシュが消えた後は再度取得したい時のrememberもよく使う。
+
+このミドルウェアを使うように `app/Http/Kernel.php` を変更。$middlewareGroupsの`web`に追加。
+```php
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\Visitors::class,
+        ],
+```
+この辺りも処理の流れを理解してないとなんとなく使うだけになる。  
+最初はRouteServiceProvider。`middleware('web')`の`web`は$middlewareGroupsの`web`グループを指定している。このweb用のルートで`routes/web.php`を読み込んでいるのでweb.phpに書いたルートのすべてに`web`グループのミドルウェアが適用される。
+```php
+        $this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+        });
+```
+
+これでリクエストの度に訪問者が更新されるので後は表示。  
+`resources/views/home/visitors.blade.php`
+```php
+<span class="font-bold">最近の訪問者</span>
+@foreach(cache('visitors') as $visitor)
+    <span class="ml-3">
+        {{ $visitor }}
+    </span>
+@endforeach
+```
+
+`resources/views/home.blade.php`の一番下にでも追加。
+```php
+    <div class="py-12">
+        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    @include('home.visitors')
+                </div>
+            </div>
+        </div>
+    </div>
+```
+
+テストはExampleTest。クッキー付きでリクエストすれば名前が表示されるはず。
+```php
+    public function test_show_visitor_name()
+    {
+        $response = $this->withCookie('name', 'test visitor')
+                         ->get('/');
+
+        $response->assertSeeText('test visitor');
+    }
+```
+
+## ひとまず完成

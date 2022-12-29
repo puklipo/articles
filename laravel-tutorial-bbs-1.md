@@ -70,6 +70,8 @@ sail up -d
 ```
 ブラウザで http://localhost/ が表示できれば新規プロジェクト作成は完了。
 
+これ以降出てくる`sail ...`コマンドは`sail up -d`で起動した状態でしか使えない。
+
 終了はstopかdown
 ```shell
 sail down

@@ -814,7 +814,7 @@ http://localhost/ へのGETリクエスト
 
 homeの投稿フォームからroute('post.store')にPOSTリクエストを送信  
 →ルーティングのRoute::resource('post')の内のpost.store  
-→PostControllerのstore()でPostモデルに保存。　　
+→PostControllerのstore()でPostモデルに保存。  
 →back()で前のページに戻る。
 
 「前のページに戻る」がここでのレスポンス。レスポンスを返したのでここは終了。  

@@ -648,6 +648,7 @@ prependで配列の先頭に追加して、uniqueで重複を除く。これで�
 デプロイして公開する気はないので少しだけ画像を載せる。
 
 <img src="/image/laravel-bbs/laravel-bbs-1.png">
+<img src="/image/laravel-bbs/laravel-bbs-2.png">
 
 ## 付録：PHP8.2での動作確認作業
 これを書いてる時点でのSailはPHP8.1で環境が作られる。

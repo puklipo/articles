@@ -27,7 +27,7 @@ Laravel入門 いにしえの掲示板を作る パート1
 - 本番環境での公開はしない。開発環境までの記事。
 
 ## 対象読者
-この環境構築ができている人。
+この環境構築ができている人。昔からLaravelは開発環境構築段階で躓かないように徹底して整備しているのでここで躓く人は対象外。
 
 - [Laravel 開発環境構築 Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)
 - [Laravel 開発環境構築 Mac版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-mac.md)

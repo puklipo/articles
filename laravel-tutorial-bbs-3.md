@@ -650,6 +650,58 @@ prependで配列の先頭に追加して、uniqueで重複を除く。これで�
 <img src="/image/laravel-bbs/laravel-bbs-1.png">
 <img src="/image/laravel-bbs/laravel-bbs-2.png">
 
+## 完成後の整理
+完成したと思っても終わりではない。むしろ公開して運用し出した後が本番。
+
+この記事ではここで終わりだけど今後のために少し整理をする。
+
+- 投稿の個別ページも作る。`post.show`ルート。
+- 投稿のbladeはhome/内に全部置いてたけど個別の投稿用に`post/`に移動。
+
+bladeファイルの場所はその時扱いやすいように適宜変更する。
+
+- `resources/views/post/post.blade.php`は一つの投稿。home/postsのforeach内をpost/postに移動。
+- 投稿のタイトルから個別ページへリンク。
+- comment, post-menu, post-delete-confirmもpost/内に移動。移動に合わせてincludeやコントローラーのview()を修正。
+- home/に残ってるのはhome.blade.phpから読み込んでるposts, form, visitors。
+- post/show.blade.php は個別ページ用、
+
+showは投稿を一つ表示するだけなのでpost.postを読み込むだけ。
+```php
+<x-app-layout>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @include('post.post')
+        </div>
+    </div>
+</x-app-layout>
+```
+
+PostControllerのshow()
+```php
+    public function show(Post $post)
+    {
+        $post->load('comments');
+
+        return view('post.show')->with(compact('post'));
+    }
+```
+
+一応テストも。PostTest
+```php
+    public function test_show_single_post()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->get(route('post.show', $post));
+
+        $response->assertSuccessful()
+                 ->assertSeeText($post->name);
+    }
+```
+
+ブラウザで軽く動作確認とテストの実行。ファイルを色々移動しても修正漏れがなければテストは失敗しない。ブラウザの手動操作だけでテストするなら今までやってきたテストをまた全部やり直し。テストの真の価値が出てくるのはこの段階から。
+
 ## 付録：PHP8.2での動作確認作業
 これを書いてる時点でのSailはPHP8.1で環境が作られる。
 

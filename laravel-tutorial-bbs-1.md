@@ -89,6 +89,8 @@ https://github.com/laravel/sail-server/blob/master/resources/scripts/php.sh
 ### ヒント3
 「Dockerを知らなくてもSailは使える」なんてことはないのでDockerについても学習する。
 
+例えば.envの`DB_HOST=mysql`はDockerを知らない人が見たらなぜこれで動くのか分からない。LaravelではなくDockerの知識が必要な箇所。Laravelのドキュメントではこういう部分の説明はほとんどない。
+
 ## インストール直後のLaravelプロジェクトを確認
 ここからはPhpStormでプロジェクトを開いて進める。
 

@@ -807,6 +807,24 @@ return view('home')->with(['posts' => $posts]);
 ### ヒント2
 「{!! !!}とe()」はLaravelの機能、nl2br()はPHPの機能。普通に混在して使うのでPHPの知識も当然のように必須。
 
+### ヒント3
+Laravelはviewのbladeファイルを作る部分は簡単にする機能はないので自分でファイルを作るか他のファイルをコピーする。中のhtmlはスターターキットを使ってるなら既存のhtmlを真似すればいい。
+
+htmlのサポートが控えめなのは「レスポンスとして返すのはhtmlに限らない」から。  
+Eloquentモデルをそのまま返した場合、自動的にjsonに変換されてレスポンスとして返す。
+```php
+class HomeController extends Controller
+{
+    public function __invoke(Request $request)
+    {
+        $posts = Post::latest('updated_at')->paginate();
+
+        return $posts;
+    }
+}
+```
+Laravel以外のフレームワークではコントローラーとviewが自動的に決まるものもあるけどそれはレスポンスをhtmlと決め打ちしている。「jsonを返すAPIとしてだけ使う」事例も多いだろう現代ではhtmlに決め打ちせず何を返すかはコントローラーで毎回指定するほうがいい。
+
 ## 処理の流れを振り返る
 http://localhost/ へのGETリクエスト  
 →ルーティングのRoute::get('/')  

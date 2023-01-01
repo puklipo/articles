@@ -780,3 +780,7 @@ Laravelはキューが使えるようになったら一人前。Laravelの機能
 
 ### サービスコンテナ
 最後に書くけどサービスコンテナこそがLaravelの心臓。最重要機能。入門段階ではそんなに気にしなくていいけどサービスコンテナを理解できるかでLaravelを使いこなせるかが決まる。
+
+## あとがき
+コードはGitHubに。  
+https://github.com/pop-culture-studio/laravel-bbs

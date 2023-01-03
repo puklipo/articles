@@ -482,7 +482,7 @@ php artisan route:list --path=post
   GET|HEAD        post/{post}/edit ........... post.edit › PostController@edit
 ```
 
-http://localhost/post を表示はできるけどContorollerから何もレスポンスを返してないのでまだ何もない。
+http://localhost/post を表示はできるけどControllerから何もレスポンスを返してないのでまだ何もない。
 
 ## ホームも作る
 ```shell

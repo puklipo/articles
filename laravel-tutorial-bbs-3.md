@@ -370,6 +370,54 @@ DestroyPostRequestで確認してるのでPostControllerのdestroy()はそのま
 
 リソースコントローラーでの基本的なCRUDは毎回同じ作業で退屈。Laravelでも便利にする機能はない。
 
+### ヒント1
+今回の掲示板は管理者しかログインしないのでほとんど出て来ないけどBreezeがインストールしたProfileControllerを見れば`$request->user()`が使われている。これは「ログインしている現在のユーザー」でLaravelでよく使う機能の一つ。
+
+複数の書き方ができるのでこれらは全部同じ。でもコントローラーでは主に`$request->user()`を使う。
+```php
+$user = Auth::user();
+$user = auth()->user();
+$user = $request->user();
+```
+なぜ`$request`かというとコントローラーでは大体の場面で`$request`を引数に指定しているのでいつでも使えるから。`$request->user()`で使えばAuth部分は全く出て来ない。
+```php
+    /**
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function show(Request $request)
+    {
+        //
+    }
+```
+
+この話は歴史的経緯を知らないと理解できないのでコントローラーでも`Auth::user()`使ってる初心者は多い。
+
+Laravel4は名前空間を使ってなかったのでコントローラーで`Auth::user()`だけで使えた。  
+Laravel5.0から名前空間を使うのでAuthを使うには先にuseでインポートか`\Auth`で使う必要が出てきた。
+```php
+use Illuminate\Support\Facades\Auth;
+$user = Auth::user();
+
+$user = \Auth::user();
+```
+これがLaravel4と比べると無駄な記述が増えてしまうのでもっと簡単に使えるように`$request->user()`やヘルパーが用意された。`auth()`ならuseも`\`も不要でLaravel4のAuth::user()と同じように使える。
+```php
+$user = auth()->user();
+```
+
+`$request->user()`が追加されたのは2014年9月頃。  
+https://github.com/laravel/framework/commit/b83a08e3897b268cb4a4147ef77b00bf9741d388
+
+`auth()`の追加は2015年4月。  
+https://github.com/laravel/framework/commit/46203676c748ac3cdb4849e75e711ca9cb1ca118
+
+現在のLaravelでの使われ方を見ると
+- コントローラーでは`$request->user()`
+- bladeでは省略できるので`Auth::user()`
+
+`$request->user()`さえ覚えておけば他は`Auth::user()`でも`auth()->user()`でもどちらでもいい。`request()->user()`でも同じだけどこれなら`auth()->user()`のほうが短い。
+
 ## アイコン選択機能
 退屈な作業の後は見た目が変わるアイコンを表示しよう。
 

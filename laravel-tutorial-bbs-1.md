@@ -141,6 +141,15 @@ routes/web.phpで「リクエストを受け取ってレスポンスを返す」
 ### ヒント1
 本当の入り口は`/public/index.php`だけど入門段階でもその後でもほとんど気にすることはないのでルーティングが入り口と思っていていい。
 
+一応`/public/index.php`の中身を確認すればコードからも「リクエストを受け取ってレスポンスを返す」が理解できる。
+```php
+$response = $kernel->handle(
+    $request = Request::capture()
+)->send();
+```
+
+`/public/index.php`を変更することは一切ないので頭の中に入れておくだけでいい。
+
 ### ヒント2
 より正確にはLaravelの入り口は2つある。
 

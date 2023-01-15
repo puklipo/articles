@@ -3,7 +3,7 @@ Laravel 開発環境構築 Mac版
 
 [Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)と違って完全に新しいPCでは作業してないけどMacでの構築方法は変わってないので影響ない。
 
-最終更新日：2022年12月  
+最終更新日：2023年1月  
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 対象読者
@@ -14,6 +14,8 @@ Laravel 開発環境構築 Mac版
 プロが対象なので有料のツールも遠慮なく含める。
 
 ## Laravelを使う前に必須な知識
+フレームワークとは「知識の下限を揃えるためのもの」。Laravelの公式ドキュメントはこのくらいは知ってるだろうという前提で進む。
+
 - 一般以上のPCスキル
 - Webに関する幅広い知識
 - 素のPHP。最新バージョンまで。composerとPSR。

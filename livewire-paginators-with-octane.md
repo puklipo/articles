@@ -223,3 +223,13 @@ ServiceProviderやコントローラーでの`PaginationState::resolveUsing()`�
 LaravelのページネーションとLivewireのページネーションを使ったページを行き来してもエラーは出ない。
 
 普通に使って何も問題はなくなった。他に問題が出て来ないかはしばらく使ってみないと確認できない。
+
+## Octane v1.2.10で
+https://github.com/laravel/octane/releases/tag/v1.2.10
+`PaginationState::resolveUsing($event->sandbox);`はOctane側でも有効化されたのでFlushPaginationでは不要になった。
+```php
+    public function handle($event)
+    {
+        Paginator::useTailwind();
+    }
+```

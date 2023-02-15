@@ -143,6 +143,7 @@ Laravelではテストを書くのが普通で「ステップ実行」なんて�
 - peclでインストール後は勝手にXdebugが有効化されるのでphp.iniを編集して無効にする。
   - `php --ini`でphp.iniの場所を確認。PHP8.2なら`/opt/homebrew/etc/php/8.2/php.ini`。1行目の`zend_extension="xdebug.so"`を削除するか`;zend_extension="xdebug.so"`で無効にする。
 - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.2なら`/opt/homebrew/Cellar/php/8.2.0/pecl/20220829/xdebug.so`
+- こういうPATHは環境やバージョンで変わるのでそのままコピペして使わない。
 
 ### composer
 ```shell

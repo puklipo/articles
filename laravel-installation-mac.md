@@ -1,10 +1,13 @@
-Laravel 開発環境構築 Mac版
+Laravel 開発環境構築 Mac(Apple Silicon)版
 ----
 
 [Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)と違って完全に新しいPCでは作業してないけどMacでの構築方法は変わってないので影響ない。
 
-最終更新日：2023年1月  
+最終更新日：2023年2月  
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
+
+## 更新履歴
+- 2023年2月：新しいMacで実際に環境構築したのでApple Silicon用に書き直し。
 
 ## 対象読者
 プログラミング初心者は対象じゃない。Laravelは初心者が使うものじゃない。
@@ -68,7 +71,7 @@ https://iterm2.com/
 ここでは書かないけどzshのカスタマイズも自分の使いやすいように行う。
 
 ## XcodeのCommand Line Tools
-Laravelには関係なさそうでもnode.js/npmで影響が出ることがあるのでインストール。
+Laravelには関係なさそうでもHomebrewで必要だったりnode.js/npmで影響が出ることがあるのでインストール。
 ```shell
 xcode-select --install
 ```
@@ -85,13 +88,30 @@ https://brew.sh/index_ja
 brew -v
 ```
 
-PATHの設定が必要ならしておく。  
-.zshrc
+インストール時に`.zprofile`に追記するように案内が出るけどPhpStormを使うならこれは無視する。
 ```shell
-export PATH=/usr/local/bin:$PATH
-
-export PATH=~/.composer/vendor/bin:$PATH
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/***/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
+`.zprofile`ではなく`.zshrc`に追加する。原因ははっきりしないけどインストール先が変わってPhpStormからのPHP/composerの実行に失敗することがある。`.zshrc`に追加すれば解決。
+```shell
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/***/.zshrc
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+Apple SiliconではHomebrewのインストール先が`/opt/homebrew/`に変わっている。旧機種から移行アシスタントで移行すると`/usr/local/`内に古いHomebrewが残っているので新しいHomebrewで再度インストールし直す。
+
+```shell
+cd ~/
+
+# 古いbrewでBrewfileを作成
+/usr/local/bin/brew bundle dump
+
+# 新brewで再インストール
+brew bundle
+```
+
+インストール先が変わったので色々な所で設定するPATHもすべて変わってしまう。これまで当たり前のように`/usr/local/bin/php`と認識していたことが変わるので全部忘れて覚え直しが必要。
 
 ## Homebrewでいろいろインストール
 「開発環境は全部Docker内に閉じ込める」なんて現実的には机上の空論。そんな使い方は不便すぎるのでDocker外の手元でもphp,composer,npmくらいは使えるようにしておく。
@@ -114,16 +134,13 @@ PHPの後にpeclでインストール。
 pecl install xdebug
 ```
 
-Apple Siliconマシンで問題が発生した場合はページの説明を読む。  
-https://xdebug.org/docs/install#pecl
-
 PhpStormでXdebugをオンデマンドモードで使うには。  
 https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode  
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 
 - peclでインストール後は勝手にXdebugが有効化されるのでphp.iniを編集して無効にする。
-  - `php --ini`でphp.iniの場所を確認。PHP8.2なら`/usr/local/etc/php/8.2/php.ini`。1行目の`zend_extension="xdebug.so"`を削除するか`;zend_extension="xdebug.so"`で無効にする。
-- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.2なら`/usr/local/Cellar/php/8.2.0/pecl/20220829/xdebug.so`
+  - `php --ini`でphp.iniの場所を確認。PHP8.2なら`/opt/homebrew/etc/php/8.2/php.ini`。1行目の`zend_extension="xdebug.so"`を削除するか`;zend_extension="xdebug.so"`で無効にする。
+- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.2なら`/opt/homebrew/Cellar/php/8.2.0/pecl/20220829/xdebug.so`
 
 ### composer
 ```shell

@@ -60,6 +60,9 @@ https://sequel-ace.com/
 
 sail起動後に接続可能。データベースを指定しないことで大量のLaravelプロジェクトでも共通で使える。接続後に表示するデータベースの選択が必要。
 
+Windowsと共通化したいならTablePlusでもいい。
+https://tableplus.com/
+
 ## Docker Desktop
 https://www.docker.com/products/docker-desktop/
 

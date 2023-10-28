@@ -7,6 +7,7 @@ Laravel 新PCでの開発環境構築 Windows11版
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 更新履歴
+- 2023年10月：node.jsをInstallation Scriptsを使う方法に変更。
 - 2023年2月：データベースアプリ変更。
 
 ## 対象読者
@@ -222,17 +223,26 @@ export PATH=~/.composer/vendor/bin:$PATH
 ```
 
 ### node.js
-https://github.com/nodesource/distributions/blob/master/README.md
+https://github.com/nodesource/distributions
 
-これはnode.js 19のインストールなので必ず↑を見て最新バージョンを入れる。
+これはnode.js 20のインストールなので必ず↑を見て最新バージョンを入れる。
 ```shell
-curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - &&\
-sudo apt-get install -y nodejs
+curl -SLO https://deb.nodesource.com/nsolid_setup_deb.sh
+chmod 500 nsolid_setup_deb.sh
+./nsolid_setup_deb.sh 20
+apt-get install nodejs -y
 ```
 ```shell
 node -v
 npm -v
 ```
+nodeのバージョンアップ方法。
+```shell
+./nsolid_setup_deb.sh 21
+apt-get install nodejs -y
+```
+
+WSLに直接インストールする以外の方法も色々あるけどLaravelで使うならnpmを使うだけなのでこれで十分。
 
 ### バージョンアップ作業
 ```shell

@@ -349,6 +349,48 @@ with(fn () => ['posts' => Post::paginate(10)]);
 </div>
 ```
 
+## ファイルアップロード
+### Livewire スタンダード
+```php
+<?php
+ 
+namespace App\Livewire;
+ 
+use Livewire\Component;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Validate;
+ 
+class UploadPhoto extends Component
+{
+    use WithFileUploads;
+ 
+    #[Validate('image|max:1024')]
+    public $photo;
+ 
+    public function save()
+    {
+        $this->photo->store('photos');
+    }
+}
+```
+
+### Volt functional
+```php
+use function Livewire\Volt\{state, usesFileUploads};
+ 
+usesFileUploads();
+ 
+state(['photo']);
+ 
+$save = function () {
+    $this->validate([
+        'photo' => 'image|max:1024',
+    ]);
+ 
+    $this->photo->store('photos');
+};
+```
+
 ## Full-page component レイアウト指定
 
 ### Livewire スタンダード

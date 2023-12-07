@@ -23,7 +23,7 @@ Voltの前に普通の使い方の理解は必須。
 
 ### Volt functional
 BladeファイルだけでLivewireを使う新しい方法。Vue.js風の表現ならシングルファイルLivewireコンポーネント。
-実装例：Breezeのlivewire-functionalスタック。https://github.com/laravel/breeze/tree/1.x/stubs/livewire-functional/resources/views/livewire
+実装例：Breezeのlivewire-functionalスタック。 https://github.com/laravel/breeze/tree/1.x/stubs/livewire-functional/resources/views/livewire
 
 ```php
 <?php
@@ -46,7 +46,7 @@ Laravel Folioと似てるし一緒に発表されたけどFolioとは関係な�
 
 ### Volt Class-based
 Voltを普通の使い方に近い無名classを使うスタイルにしたもの。
-実装例：Breezeのlivewireスタック。https://github.com/laravel/breeze/tree/1.x/stubs/livewire/resources/views/livewire
+実装例：Breezeのlivewireスタック。 https://github.com/laravel/breeze/tree/1.x/stubs/livewire/resources/views/livewire
 
 ```php
 <?php

@@ -67,7 +67,7 @@ new class extends Component {
     <button wire:click="increment">+</button>
 </div>
 ```
-複雑化しただけでこれの追加は余計だった気がする。
+複雑化しただけでこれの追加は余計だった気がする。Laravelは複数の使い方ができるのが混乱の元なのに余計な選択肢を増やすのは明らかに悪い。
 
 ## コンポーネント作成コマンド
 

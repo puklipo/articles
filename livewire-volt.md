@@ -561,3 +561,4 @@ https://qiita.com/advent-calendar/2023/laravel
 
 ここは長文を想定してないけど最近は外部に書いてないのでここに書く。
 ドメインを破棄した時用にGitHubにも残している。
+https://github.com/pop-culture-studio/articles/blob/main/livewire-volt.md

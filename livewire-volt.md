@@ -94,7 +94,7 @@ functionalと同じ。
 ### Volt functional
 `resources/views/livewire`にBladeファイルのみ。
 
-`resources/views/pages`に置いたBladeファイルも使える。
+`resources/views/pages`に置いたBladeファイルも使える。Folio用に作ったページだけど機能を追加したくなってVoltに変更、みたいな使い方を想定しているのだろう。FolioのファイルベースルーティングとVoltを同時に使えるかは試してないので不明。
 
 ### Volt Class-based
 functionalと同じ。

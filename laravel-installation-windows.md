@@ -3,10 +3,11 @@ Laravel 新PCでの開発環境構築 Windows11版
 
 何もインストールしてない新しいWindows PCでLaravelの開発ができるまでの環境を作る。実際に新PCで作業しながら書いたので現時点では最善。
 
-最終更新日：2023年2月  
+最終更新日：2024年4月 
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 更新履歴
+- 2024年4月：node.jsのインストール方法を更新。PHP8.3に更新。初版から時間が経ってきたのでそろそろ古くなってるかもしれない。これを読んでも分からない初心者はLaravel Herdを使うのがおすすめ。
 - 2023年10月：node.jsをInstallation Scriptsを使う方法に変更。
 - 2023年2月：データベースアプリ変更。
 
@@ -164,15 +165,15 @@ sudo apt-get install curl zip unzip
 LC_ALL=C.UTF-8 sudo add-apt-repository ppa:ondrej/php
 ```
 ```shell
-sudo apt-get install php8.2-cli php8.2-dev \
-       php8.2-pgsql php8.2-sqlite3 php8.2-gd \
-       php8.2-curl \
-       php8.2-imap php8.2-mysql php8.2-mbstring \
-       php8.2-xml php8.2-zip php8.2-bcmath php8.2-soap \
-       php8.2-intl php8.2-readline \
-       php8.2-ldap \
-       php8.2-msgpack php8.2-igbinary php8.2-redis php8.2-swoole \
-       php8.2-memcached php8.2-xdebug
+sudo apt-get install -y php8.3-cli php8.3-dev \
+       php8.3-pgsql php8.3-sqlite3 php8.3-gd \
+       php8.3-curl \
+       php8.3-imap php8.3-mysql php8.3-mbstring \
+       php8.3-xml php8.3-zip php8.3-bcmath php8.3-soap \
+       php8.3-intl php8.3-readline \
+       php8.3-ldap \
+       php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-swoole \
+       php8.3-memcached php8.3-pcov php8.3-imagick php8.3-xdebug
 ```
 ```shell
 php -v
@@ -180,7 +181,7 @@ php -v
 
 composer install時に`ext-***`が足りないみたいなエラーが出た時
 ```shell
-sudo apt-get install php8.2-***
+sudo apt-get install php8.3-***
 ```
 
 ### PhpStormでXdebugをオンデマンドモードで使う
@@ -191,18 +192,17 @@ Laravelではテストを書くのが普通で「ステップ実行」なんて�
 - - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わる。例としてPHP8.2なら`/usr/lib/php/20220829/xdebug.so`
 
 ### composer
+必ずここからコピペする。
 https://getcomposer.org/download/
 
 ```shell
-php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
-php composer-setup.php
-php -r "unlink('composer-setup.php');"
+// ダウンロードページでコピペしたインストールスクリプトを実行。
 
+// composerだけで使えるように移動。
 sudo mv composer.phar /usr/local/bin/composer
 ```
 ```shell
-composer
+composer -V
 ```
 
 composerをインストールしてないとgit clone後の初回インストールでDockerを使う必要がある。
@@ -223,23 +223,17 @@ export PATH=~/.composer/vendor/bin:$PATH
 ```
 
 ### node.js
+nodesourceからのインストール方法自体がたまに変わるので常にここを確認する。  
 https://github.com/nodesource/distributions
 
-これはnode.js 20のインストールなので必ず↑を見て最新バージョンを入れる。
+これはnode.js 21のインストールなので必ず↑を見て最新バージョンを入れる。
 ```shell
-curl -SLO https://deb.nodesource.com/nsolid_setup_deb.sh
-chmod 500 nsolid_setup_deb.sh
-./nsolid_setup_deb.sh 20
-apt-get install nodejs -y
+curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - &&\
+sudo apt-get install -y nodejs
 ```
 ```shell
 node -v
 npm -v
-```
-nodeのバージョンアップ方法。
-```shell
-./nsolid_setup_deb.sh 21
-apt-get install nodejs -y
 ```
 
 WSLに直接インストールする以外の方法も色々あるけどLaravelで使うならnpmを使うだけなのでこれで十分。

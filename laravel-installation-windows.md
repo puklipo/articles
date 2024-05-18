@@ -188,17 +188,17 @@ sudo apt-get install php8.3-***
 https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode  
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 
-- `php --ini`でphp.iniの場所を確認。PHP8.2なら`/etc/php/8.2/cli/conf.d/20-xdebug.ini`。`;zend_extension=xdebug.so`に変更して無効化。
-- - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わる。例としてPHP8.2なら`/usr/lib/php/20220829/xdebug.so`
+- `php --ini`でphp.iniの場所を確認。PHP8.3なら`/etc/php/8.3/cli/conf.d/20-xdebug.ini`。`;zend_extension=xdebug.so`に変更して無効化。
+- - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わる。例としてPHP8.3なら`/usr/lib/php/20230831/xdebug.so`
 
 ### composer
 必ずここからコピペする。
 https://getcomposer.org/download/
 
 ```shell
-// ダウンロードページでコピペしたインストールスクリプトを実行。
+# ダウンロードページでコピペしたインストールスクリプトを実行。
 
-// composerだけで使えるように移動。
+# composerだけで使えるように移動。
 sudo mv composer.phar /usr/local/bin/composer
 ```
 ```shell

@@ -30,10 +30,10 @@ $status = (require_once __DIR__.'/bootstrap/app.php')
 どちらからも読み込まれてる`bootstrap/app.php`がLaravel11で重要ファイルに変わった。
 
 ## bootstrap/app.phpの普通の使い方
-実際のところ、普通の使い方がドキュメントにまとまってない。Laravel11のリリースノートくらい。あとはドキュメントの各所に機能ごとに書かれてる。
+実際のところ、普通の使い方がドキュメントにまとまってない。Laravel11のリリースノートくらい。あとはドキュメントの各所に機能ごとに書かれてる。  
 https://laravel.com/docs/11.x/releases
 
-大事な前提。**bootstrap/app.phpはLaravelの起動前**ってこと。起動後に当たり前に使えてる機能がここでは使えない。
+大事な前提。**bootstrap/app.phpはLaravelの起動前**ってこと。起動後に当たり前に使えてる機能がここでは使えない。  
 ここを理解してないと`bootstrap/app.php`で`config()`などを使おうとしてエラーになる。
 
 （正確には最初に`basePath`を設定してるので`base_path()`くらいは使える。でも使うと他のヘルパーも使えると勘違いされるので使ってないと予想できる）
@@ -69,7 +69,7 @@ https://github.com/laravel/framework/blob/11.x/src/Illuminate/Foundation/Configu
 ここまでが前ふり。
 
 ## 起動後に処理を挟むにはbooted()
-`bootstrap/app.php`はLaravelの起動前だけど`booted()`だけは起動後。ここでならLaravelの機能がすべて使える。
+`bootstrap/app.php`はLaravelの起動前だけど`booted()`だけは起動後。ここでならLaravelの機能がすべて使える。  
 「bootstrap/app.phpで特殊なことをしたい」質問への答えはほとんどがこれ。
 
 ```php
@@ -96,7 +96,7 @@ return Application::configure(basePath: dirname(__DIR__))
 ```
 
 簡単な例だと分かりにくいけどこのbootedの段階でもなんでもできる。  
-特殊なこととは「withMiddlewareで設定したミドルウェアをすべて無視して再度設定し直す」とか。
+特殊なこととは「withMiddlewareで設定したミドルウェアをすべて無視して再度設定し直す」とか。  
 なんでそんなことがしたいのか分からないけどそんな質問も実在した。
 
 普通はしないだろうから詳細は説明しない。

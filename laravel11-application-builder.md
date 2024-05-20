@@ -136,18 +136,18 @@ Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応な
 ServiceProvider使えばいいので`bootstrap/app.php`で書くことは少なそう。
 
 ## withMiddleware()は
-ドキュメント中にバラバラに書かれているけどほとんど説明されてるはず。
+ドキュメント中にバラバラに書かれているけどほとんど説明されてるはず。  
 https://laravel.com/docs/11.x/middleware
 
-詳細まで知りたいならコードを見るしかない。
+詳細まで知りたいならコードを見るしかない。  
 https://github.com/laravel/framework/blob/11.x/src/Illuminate/Foundation/Configuration/Middleware.php
 
 ## withExceptions()は
-ドキュメントで説明してるけどこれだけでは分からない部分もある。
+ドキュメントで説明してるけどこれだけでは分からない部分もある。  
 https://laravel.com/docs/11.x/errors
 
-これもコードを見るしかない。
-https://github.com/laravel/framework/blob/11.x/src/Illuminate/Foundation/Configuration/Exceptions.php
+これもコードを見るしかない。  
+https://github.com/laravel/framework/blob/11.x/src/Illuminate/Foundation/Configuration/Exceptions.php  
 https://github.com/laravel/framework/blob/11.x/src/Illuminate/Foundation/Exceptions/Handler.php
 
 - 例外の種類ごとにレスポンスを変えるなら`$exceptions->render()`

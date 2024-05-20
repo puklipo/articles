@@ -132,6 +132,9 @@ Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応な
 - すべてのServiceProviderの`boot()`実行
 - appの`booted()`
 
+現実的には`bootstrap/app.php`に長いコードを書くよりServiceProvider@bootに書いたほうがいい。  
+「すべてのServiceProviderより後に実行したい」なら`booted()`使う意味もあるけどかなり特殊な用途。
+
 ## withBindings()やwithSingletons()は
 ServiceProvider使えばいいので`bootstrap/app.php`で書くことは少なそう。
 

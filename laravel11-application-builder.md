@@ -164,23 +164,31 @@ class AppServiceProvider extends ServiceProvider
     {
         info('1. AppServiceProvider register');
 
+        $this->booting(function () {
+            info('4. AppServiceProvider booting');
+        });
+
         $this->booted(function () {
-            info('3. AppServiceProvider booted');
+            info('5. AppServiceProvider booted');
         });
 
         $this->app->registered(function () {
             info('2. app registered');
         });
 
+        $this->app->booting(function () {
+            info('3. app booting');
+        });
+
         $this->app->booted(function () {
-            info('4. AppServiceProvider@register app booted');
+            info('6. AppServiceProvider@register app booted');
         });
     }
 
     public function boot(): void
     {
         $this->app->booted(function () {
-            info('5. AppServiceProvider@boot app booted');
+            info('7. AppServiceProvider@boot app booted');
         });
     }
 }

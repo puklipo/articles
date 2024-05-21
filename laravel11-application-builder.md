@@ -103,13 +103,45 @@ return Application::configure(basePath: dirname(__DIR__))
 
 ```php
     ->booted(function (Application $app) {
+        $kernel = $app->make(Kernel::class);
+
+        $middleware = (new Middleware)
+            ->redirectGuestsTo(fn () => route('login'));
+
+        // $middleware->...
+
+        $kernel->setGlobalMiddleware($middleware->getGlobalMiddleware());
+        $kernel->setMiddlewareGroups($middleware->getMiddlewareGroups());
+        $kernel->setMiddlewareAliases($middleware->getMiddlewareAliases());
+
+        if ($priorities = $middleware->getMiddlewarePriority()) {
+            $kernel->setMiddlewarePriority($priorities);
+        }
+
+        $app->instance(Kernel::class, $kernel);
+    })
+```
+
+Laravel内部のことまで熟知してる人しか使わないのでドキュメントに書けない。
+
+## registered()やbooting()もある
+Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応なので処理を挟みたいタイミングに合わせて選択。
+
+- すべてのServiceProviderの`register()`実行
+- appの`registered()`
+- appの`booting()`
+- すべてのServiceProviderの`boot()`実行
+- appの`booted()`
+
+ミドルウェアの例も`registered()`のほうが分かりやすいけど
+```php
+    ->registered(function (Application $app) {
         $app->afterResolving(Kernel::class, function ($kernel) {
             $middleware = (new Middleware)
                 ->redirectGuestsTo(fn () => route('login'));
 
             // $middleware->...
 
-            $this->pageMiddleware = $middleware->getPageMiddleware();
             $kernel->setGlobalMiddleware($middleware->getGlobalMiddleware());
             $kernel->setMiddlewareGroups($middleware->getMiddlewareGroups());
             $kernel->setMiddlewareAliases($middleware->getMiddlewareAliases());
@@ -120,17 +152,6 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
 ```
-
-Laravel内部のことまで熟知してる人しか使わないのでドキュメントに書けない。
-
-## registered()やboot()もある
-Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応なので処理を挟みたいタイミングに合わせて選択。
-
-- すべてのServiceProviderの`register()`実行
-- appの`registered()`
-- appの`boot()`
-- すべてのServiceProviderの`boot()`実行
-- appの`booted()`
 
 現実的には`bootstrap/app.php`に長いコードを書くよりServiceProviderに書いたほうがいい。  
 「すべてのServiceProviderより後に実行したい」なら`booted()`使う意味もあるけどかなり特殊な用途。

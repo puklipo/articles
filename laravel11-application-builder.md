@@ -125,7 +125,7 @@ return Application::configure(basePath: dirname(__DIR__))
 Laravel内部のことまで熟知してる人しか使わないのでドキュメントに書けない。
 
 ## registered()やbooting()もある
-Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応なので処理を挟みたいタイミングに合わせて選択。
+Laravelの起動処理はこの順番。`bootstrap/app.php`でも同じ対応なので処理を挟みたいタイミングに合わせて選択。タイミングごとにできることとできないことがある。
 
 - すべてのServiceProviderの`register()`実行
 - appの`registered()`

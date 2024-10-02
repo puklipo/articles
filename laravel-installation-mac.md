@@ -1,7 +1,7 @@
 Laravel 開発環境構築 Mac(Apple Silicon)版
 ----
 
-[Windows版](https://github.com/pop-culture-studio/articles/blob/main/laravel-installation-windows.md)と違って完全に新しいPCでは作業してないけどMacでの構築方法は変わってないので影響ない。
+[Windows版](./laravel-installation-windows.md)と違って完全に新しいPCでは作業してないけどMacでの構築方法は変わってないので影響ない。
 
 最終更新日：2023年2月  
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。

@@ -3,10 +3,11 @@ Laravel 新PCでの開発環境構築 Windows11版
 
 何もインストールしてない新しいWindows PCでLaravelの開発ができるまでの環境を作る。実際に新PCで作業しながら書いたので現時点では最善。
 
-最終更新日：2024年4月 
+最終更新日：2025年1月
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 更新履歴
+- 2025年1月：PHP8.4に更新。
 - 2024年4月：node.jsのインストール方法を更新。PHP8.3に更新。初版から時間が経ってきたのでそろそろ古くなってるかもしれない。
 - 2023年10月：node.jsをInstallation Scriptsを使う方法に変更。
 - 2023年2月：データベースアプリ変更。
@@ -158,38 +159,23 @@ artisanやcomposerのためなのでcliだけでもいい。
 SailのDockerfileを見て同じものをインストール。全部は不要なはずだけどcomposer install時に必要なこともあるので一応インストール。足りなければ後で追加。  
 https://github.com/laravel/sail/tree/1.x/runtimes
 
-```shell
-sudo apt-get install curl zip unzip
-```
-```shell
-LC_ALL=C.UTF-8 sudo add-apt-repository ppa:ondrej/php
-```
-```shell
-sudo apt-get install -y php8.3-cli php8.3-dev \
-       php8.3-pgsql php8.3-sqlite3 php8.3-gd \
-       php8.3-curl \
-       php8.3-imap php8.3-mysql php8.3-mbstring \
-       php8.3-xml php8.3-zip php8.3-bcmath php8.3-soap \
-       php8.3-intl php8.3-readline \
-       php8.3-ldap \
-       php8.3-msgpack php8.3-igbinary php8.3-redis php8.3-swoole \
-       php8.3-memcached php8.3-pcov php8.3-imagick php8.3-xdebug
-```
+（新バージョンの度に更新しなくていいように詳細は省略）
+
 ```shell
 php -v
 ```
 
 composer install時に`ext-***`が足りないみたいなエラーが出た時
 ```shell
-sudo apt-get install php8.3-***
+sudo apt-get install php8.4-***
 ```
 
 ### PhpStormでXdebugをオンデマンドモードで使う
 https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode  
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 
-- `php --ini`でphp.iniの場所を確認。PHP8.3なら`/etc/php/8.3/cli/conf.d/20-xdebug.ini`。`;zend_extension=xdebug.so`に変更して無効化。
-- - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わる。例としてPHP8.3なら`/usr/lib/php/20230831/xdebug.so`
+- `php --ini`でphp.iniの場所を確認。PHP8.4なら`/etc/php/8.4/cli/conf.d/20-xdebug.ini`。`;zend_extension=xdebug.so`に変更して無効化。
+- - PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わる。例としてPHP8.4なら`/usr/lib/php/20240924/xdebug.so`
 
 ### composer
 必ずここからコピペする。

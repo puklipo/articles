@@ -598,10 +598,3 @@ on(['post-created' => function () {
 
 ## That's all
 I've summarized the features you'll likely use often. For anything more, please refer to the documentation.
-
-Article for Advent Calendar.
-https://qiita.com/advent-calendar/2023/laravel
-
-This isn't intended for long-form content, but since I haven't been writing externally lately, I'm writing it here.
-I'm also keeping a copy on GitHub in case the domain is abandoned.
-https://github.com/pop-culture-studio/articles/blob/main/livewire-volt.md

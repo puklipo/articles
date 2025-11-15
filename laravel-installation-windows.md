@@ -134,6 +134,10 @@ SailのDockerfileを見て同じものをインストール。全部は不要な
 https://github.com/laravel/sail/tree/1.x/runtimes
 
 （新バージョンの度に更新しなくていいように詳細は省略）
+```
+sudo su
+# apt-get update && apt-get upgrade -yからphp8.4-xdebugまでコピペしてインストール
+```
 
 ```shell
 php -v
@@ -196,7 +200,7 @@ node -v
 npm -v
 ```
 
-WSLに直接インストールする以外の方法も色々あるけどLaravelで使うならnpmを使うだけなのでこれで十分。
+nvmや、WSLに直接インストールする以外の方法も色々あるけどLaravelで使うならnpmを使うだけなのでこれで十分。
 
 ### バージョンアップ作業
 ```shell

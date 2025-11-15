@@ -3,10 +3,11 @@ Laravel 新PCでの開発環境構築 Windows11版
 
 何もインストールしてない新しいWindows PCでLaravelの開発ができるまでの環境を作る。実際に新PCで作業しながら書いたので現時点では最善。
 
-最終更新日：2025年1月
+最終更新日：2025年11月
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 更新履歴
+- 2025年11月：新規WindowsユーザーでWSLを再度セットアップしたので修正。
 - 2025年1月：PHP8.4に更新。
 - 2024年4月：node.jsのインストール方法を更新。PHP8.3に更新。初版から時間が経ってきたのでそろそろ古くなってるかもしれない。
 - 2023年10月：node.jsをInstallation Scriptsを使う方法に変更。
@@ -67,36 +68,9 @@ https://tableplus.com/
 sail起動後に接続可能。データベースを指定しないことで大量のLaravelプロジェクトでも共通で使える。接続後に表示するデータベースの選択が必要。
 
 ## Windows Subsystem for Linux
-Microsoft Storeからインストール。
 
-StoreからWSLをインストールしただけの段階では`wsl --version`でバージョンを表示できる。
-```shell
-wsl --version
-
-WSL バージョン: 1.0.3.0
-カーネル バージョン: 5.15.79.1
-WSLg バージョン: 1.0.47
-MSRDC バージョン: 
-Direct3D バージョン: 
-DXCore バージョン:
-Windowsバージョン: 
-```
-
-Windows Terminal(PowerShell)で`wsl --install Ubuntu`を実行。  
+2025/11時点ではPowerShellで`wsl --install`を実行するだけでいい。  
 ダウンロード後、Ubuntu用の新しいユーザー名とパスワードを決定。
-
-```shell
-Installing, this may take a few minutes...
-Please create a default UNIX user account. The username does not need to match your Windows username.
-For more information visit: https://aka.ms/wslusers
-Enter new UNIX username: 
-New password:
-Retype new password:
-passwd: password updated successfully
-Installation successful!
-```
-
-以前と比べるとWSLのインストールもかなり簡単になっている。Laravelを使うならこのくらいはできて当然。
 
 これ以降のコマンドはWSLのUbuntuで実行。  
 Windows Terminalの設定で既存のプロファイルをUbuntuにしておく。

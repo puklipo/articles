@@ -201,6 +201,8 @@ npm -v
 ```
 
 nvmや、WSLに直接インストールする以外の方法も色々あるけどLaravelで使うならnpmを使うだけなのでこれで十分。
+ただし、copilot-cliやclaude codeのインストール時にエラーが出る場合はnvmを使うと解決するかもしれない。
+https://github.com/nvm-sh/nvm
 
 ### バージョンアップ作業
 ```shell

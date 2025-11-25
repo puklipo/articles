@@ -210,6 +210,7 @@ nvmを使うとユーザーディレクトリにnode/npmがインストールさ
 ```shell
 sudo ln -s $(which node) /usr/local/bin/
 sudo ln -s $(which npm) /usr/local/bin/
+sudo ln -s $(which npx) /usr/local/bin/
 ```
 
 ### バージョンアップ作業

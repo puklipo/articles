@@ -204,6 +204,14 @@ nvmや、WSLに直接インストールする以外の方法も色々あるけ�
 ただし、copilot-cliやclaude codeのインストール時にエラーが出る場合はnvmを使うと解決するかもしれない。
 https://github.com/nvm-sh/nvm
 
+#### nvm
+nvmを使うとユーザーディレクトリにnode/npmがインストールされる。この状態だとPhpStormからcomposerスクリプトを実行した時にnode/npmが見つからずに失敗するのでsymlinkを作る。nvmでnodeをバージョンアップする度に更新が必要。
+
+```shell
+sudo ln -s $(which node) /usr/local/bin/
+sudo ln -s $(which npm) /usr/local/bin/
+```
+
 ### バージョンアップ作業
 ```shell
 sudo apt update

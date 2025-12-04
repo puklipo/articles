@@ -7,6 +7,7 @@ Laravel 開発環境構築 Mac(Apple Silicon)版
 環境構築は「いつ」の情報かが重要なので更新日から何年も後に読んでも役に立たない。
 
 ## 更新履歴
+- 2025年12月：PHP8.5、XdebugをPIEでインストールに変更。
 - 2025年6月：PHP8.4用に少し変更。
 - 2023年2月：新しいMacで実際に環境構築したのでApple Silicon用に書き直し。移行アシスタントを使ったので完全に新規ではなけどApple Siliconへの変更なので色々再インストールは必要だった。
 
@@ -134,10 +135,14 @@ php -v
 ```
 
 ### Xdebug
-PHPの後にpeclでインストール。
+PHPの後にpieでインストール。
 
 ```shell
-pecl install xdebug
+brew install pie
+```
+
+```shell
+pie install xdebug/xdebug
 ```
 
 PhpStormでXdebugをオンデマンドモードで使うには。  
@@ -145,8 +150,8 @@ https://pleiades.io/help/phpstorm/configuring-xdebug.html#on_demand_mode
 Laravelではテストを書くのが普通で「ステップ実行」なんて全く使わない。なのでXdebugは普段は無効化、カバレッジ付きでテストを実行する時のみ有効にすればいい。この形で使うのが一番高速。
 
 - peclでインストール後は勝手にXdebugが有効化されるのでphp.iniを編集して無効にする。
-  - `php --ini`でphp.iniの場所を確認。PHP8.4なら`/opt/homebrew/etc/php/8.4/php.ini`。1行目の`zend_extension="xdebug.so"`を削除するか`;zend_extension="xdebug.so"`で無効にする。
-- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.4なら`/opt/homebrew/lib/php/pecl/20240924/xdebug.so`
+  - `php --ini`でphp.iniの場所を確認。PHP8.5なら`/opt/homebrew/etc/php/8.5/php.ini`。php.ini内の`zend_extension="xdebug"`を削除するか`;zend_extension="xdebug"`で無効にする。
+- PhpStormのインタープリター設定の「デバッガー拡張機能」に`xdebug.so`のパスを指定。ここはPHPのバージョンアップで変わるのでpeclでインストール後の表示を確認。例としてPHP8.5なら`/opt/homebrew/lib/php/pecl/20250925/xdebug.so`
 - こういうPATHは環境やバージョンで変わるのでそのままコピペして使わない。
 
 ### composer
@@ -157,7 +162,7 @@ brew install composer
 composer
 ```
 
-`laravel/installer`をインストールするなら。最近はlaravel.build使うので入れなくてもいい。
+`laravel/installer`もインストール。
 ```shell
 composer global require laravel/installer
 
